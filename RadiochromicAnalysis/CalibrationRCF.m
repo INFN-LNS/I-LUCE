@@ -1,9 +1,7 @@
 % GAP Cirrone, November 2021
-% Last revision: November 24th, 2021
+% Last revision: November 2021
 %
-% Procedure for the C
-% 
-% Calibration in dose of radiochromic films
+% Procedure for the calibration in dose of radiochromic films
 %
 
 %% Close and clean all variables and pictures
