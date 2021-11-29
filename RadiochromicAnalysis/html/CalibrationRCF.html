@@ -1,0 +1,381 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>CalibrationRCF</title><meta name="generator" content="MATLAB 9.10"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-11-24"><meta name="DC.source" content="CalibrationRCF.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Close and clean all variables and pictures</a></li><li><a href="#3">Add folders</a></li><li><a href="#4">main while loop</a></li><li><a href="#5">Asks for the number of dose points</a></li><li><a href="#6">Enter the dose values for each point</a></li><li><a href="#7">Load the background image and extract the RED channel</a></li><li><a href="#8">Open the red image, ROI it and extract information</a></li><li><a href="#9">Asks to open the calibration images and stores the ROI information</a></li><li><a href="#10">Calculate the Net Optical Density</a></li><li><a href="#11">Write in a file the Calibration points</a></li><li><a href="#12">Plot the calibration curve</a></li></ul></div><pre class="codeinput"><span class="comment">% GAP Cirrone, November 2021</span>
+<span class="comment">% Last revision: November 24th, 2021</span>
+<span class="comment">%</span>
+<span class="comment">% Procedure for the Calibration in dose of radiochromic films</span>
+<span class="comment">%</span>
+</pre><h2 id="2">Close and clean all variables and pictures</h2><pre class="codeinput">clear <span class="string">all</span>
+close <span class="string">all</span>
+</pre><h2 id="3">Add folders</h2><pre class="codeinput">addpath(<span class="string">"Functions/"</span>);
+</pre><h2 id="4">main while loop</h2><pre class="codeinput">G = 0;
+
+<span class="keyword">while</span> G == 0
+    disp(<span class="string">'Have you a calibration already acquired?'</span>)
+    disp(<span class="string">'y/n or press x to exit'</span>)
+    P = input(<span class="string">'Enter answer: '</span>, <span class="string">'s'</span>);
+    <span class="keyword">switch</span> P
+        <span class="keyword">case</span> <span class="string">'y'</span>
+            <span class="comment">% Open and read an old calibration file</span>
+            <span class="comment">%</span>
+            [DosesValues,NetOpticalDensities] = OpenAndReadCalibrationCurve();
+
+            <span class="comment">% PlotCalibrationCurve(NetOpticalDensities, DosesValues) and</span>
+            <span class="comment">% makes a 3rd order polynomial fit</span>
+            <span class="comment">%</span>
+            [xData, yData, fitresult, gof] = RCFPolynomialFit(NetOpticalDensities, DosesValues);
+
+            <span class="comment">% Plot the calibration data toegheter with the polynomial fit</span>
+            <span class="comment">% curve and make a separate plot with the residuals</span>
+            <span class="comment">%</span>
+            PlotFitAndResidual(xData, yData, fitresult, gof)
+
+            <span class="comment">% Write the calibration data and the results from the</span>
+            <span class="comment">% polynomial fit in a dingle text file</span>
+            <span class="comment">%</span>
+            WriteDataAndFitParameters(DosesValues, NetOpticalDensities, fitresult, gof)
+
+            G = G + 1;
+
+        <span class="comment">% Enter in the case 'n' when calibration data are not present and they</span>
+        <span class="comment">% must be acquired reading a set of irradiated RCF</span>
+        <span class="comment">%</span>
+        <span class="keyword">case</span> <span class="string">'n'</span>
+</pre><h2 id="5">Asks for the number of dose points</h2><pre class="codeinput">            prompt = <span class="string">'Enter the number of dose points:  '</span>;
+            DosesPoints = input(prompt);
+</pre><h2 id="6">Enter the dose values for each point</h2><pre class="codeinput">            disp(<span class="string">'Now enter the doses values in Gy (press return after each value)'</span>)
+
+            DosesValues = [];
+            <span class="keyword">for</span> i =  1 : 1 : DosesPoints
+                prompt = <span class="string">'Enter the dose value number  '</span> +  string(i) + <span class="string">': '</span>;
+                DosesValues(i) = input(prompt);
+            <span class="keyword">end</span>
+</pre><h2 id="7">Load the background image and extract the RED channel</h2><p>Asks for opening an image</p><pre class="codeinput">            disp(<span class="string">'Open the Background image'</span>)
+            [filename,user_canceled] = imgetfile;
+
+            <span class="comment">% Read the image</span>
+            <span class="comment">%</span>
+            BackgroundImage = imread(filename);
+
+            [BackgroundImageRedLayer] = ExtractRedChannelFromImage(BackgroundImage);
+
+            <span class="comment">% Asks for a folder where save the red image of the background</span>
+            <span class="comment">%</span>
+            disp(<span class="string">'Choose where the red image has to be saved'</span>)
+
+            filter = {<span class="string">'*.TIFF'</span>};
+            [filenameImage_red,user_canceled] = uiputfile(filter,<span class="keyword">...</span>
+                <span class="string">'File Selection'</span>,<span class="string">'Fondo.TIFF'</span>);
+
+            <span class="comment">% Save the Background image in the red channel</span>
+            <span class="comment">%</span>
+            imwrite(BackgroundImageRedLayer, convertCharsToStrings(filenameImage_red));
+            disp(<span class="string">'The image has been saved in '</span> + convertCharsToStrings(filenameImage_red));
+</pre><h2 id="8">Open the red image, ROI it and extract information</h2><pre class="codeinput">            disp(<span class="string">'Open the Background red image'</span>)
+            [filename,user_canceled] = imgetfile;
+
+            <span class="comment">% Read the background image</span>
+            BackgrounImage = imread(filename);
+
+            <span class="comment">% The following funtion was creted to extract the pixel values</span>
+            <span class="comment">% and the correposnding standard deviation from a ROI of a given image</span>
+            <span class="comment">%</span>
+            [AveragePixelsValueBackground, StandardDeviationPixelsValueBackground] = <span class="keyword">...</span>
+                ExtractInformationFromImageROI(BackgrounImage);
+</pre><h2 id="9">Asks to open the calibration images and stores the ROI information</h2><pre class="codeinput">            AveragePixelsValueCalibration = [];
+            StandardDeviationPixelsValueCalibration = [];
+
+            <span class="keyword">for</span> i = 1 : 1 : DosesPoints
+                disp(<span class="string">'Open the RCF corresponding to the Dose '</span> +  string(i) + <span class="string">': '</span>)
+                [filename,user_canceled] = imgetfile;
+
+                <span class="comment">% Read the image</span>
+                <span class="comment">%</span>
+                Image = imread(filename);
+                ImageBackground = ExtractRedChannelFromImage(Image);
+
+                [AveragePixelsValue, StandardDeviationPixelsValue] = <span class="keyword">...</span>
+                    ExtractInformationFromImageROI(ImageBackground);
+
+                AveragePixelsValueCalibration(i) = AveragePixelsValue;
+                StandardDeviationPixelsValueCalibration(i) = StandardDeviationPixelsValue;
+            <span class="keyword">end</span>
+</pre><h2 id="10">Calculate the Net Optical Density</h2><pre class="codeinput">            NetOpticalDensities = -log(AveragePixelsValueCalibration/AveragePixelsValueBackground);
+</pre><h2 id="11">Write in a file the Calibration points</h2><p>(Doses and the NetOpticalDensities)</p><pre class="codeinput">            disp(<span class="string">'Choose where the calibration data (Dose and NetOD) will be saved'</span>)
+
+            <span class="comment">% Open a dialog box specifying the file name where to save the calibration</span>
+            <span class="comment">% data</span>
+            <span class="comment">% A default file name is given</span>
+            <span class="comment">%</span>
+
+            <span class="comment">% Asks to open a file where to write the calibration points</span>
+            <span class="comment">%</span>
+            filter = {<span class="string">'*.txt'</span>};
+            [filenameCalibrationCurve,user_canceled] = uiputfile(filter,<span class="keyword">...</span>
+                <span class="string">'File Selection'</span>,<span class="string">'CalibrationData.txt'</span>);
+
+            <span class="comment">% Open the file just defined</span>
+            <span class="comment">%</span>
+            fid = fopen(convertCharsToStrings(filenameCalibrationCurve), <span class="string">'wt'</span>);
+
+            <span class="comment">% Write the file with the calibration points</span>
+            <span class="comment">%</span>
+            fprintf(fid, <span class="string">'%f %f\n'</span>, [DosesValues; NetOpticalDensities]);
+            fclose(fid);
+</pre><h2 id="12">Plot the calibration curve</h2><pre class="codeinput">            PlotCalibrationCurve(NetOpticalDensities, DosesValues)
+
+            G = G + 1;
+</pre><pre class="codeinput">        <span class="keyword">case</span> <span class="string">'x'</span>
+            disp(<span class="string">'The program has been terminated'</span>)
+            G = G + 1;
+        <span class="keyword">otherwise</span>
+            disp(<span class="string">'Insert a valid value'</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Have you a calibration already acquired?
+y/n or press x to exit
+</pre><pre class="codeoutput error">Error using input
+Cannot call INPUT from EVALC.
+
+Error in CalibrationRCF (line 22)
+    P = input('Enter answer: ', 's');
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% GAP Cirrone, November 2021
+% Last revision: November 24th, 2021
+%
+% Procedure for the Calibration in dose of radiochromic films
+%
+
+%% Close and clean all variables and pictures
+%
+clear all
+close all
+
+%% Add folders
+addpath("Functions/");
+
+%%  main while loop 
+
+G = 0;
+
+while G == 0
+    disp('Have you a calibration already acquired?')
+    disp('y/n or press x to exit')
+    P = input('Enter answer: ', 's');
+    switch P
+        case 'y'
+            % Open and read an old calibration file
+            %
+            [DosesValues,NetOpticalDensities] = OpenAndReadCalibrationCurve();
+
+            % PlotCalibrationCurve(NetOpticalDensities, DosesValues) and
+            % makes a 3rd order polynomial fit
+            %
+            [xData, yData, fitresult, gof] = RCFPolynomialFit(NetOpticalDensities, DosesValues);
+            
+            % Plot the calibration data toegheter with the polynomial fit
+            % curve and make a separate plot with the residuals
+            %
+            PlotFitAndResidual(xData, yData, fitresult, gof)
+            
+            % Write the calibration data and the results from the
+            % polynomial fit in a dingle text file
+            %
+            WriteDataAndFitParameters(DosesValues, NetOpticalDensities, fitresult, gof)
+
+            G = G + 1;
+        
+        % Enter in the case 'n' when calibration data are not present and they
+        % must be acquired reading a set of irradiated RCF
+        %
+        case 'n'
+            %% Asks for the number of dose points
+            %
+            prompt = 'Enter the number of dose points:  ';
+            DosesPoints = input(prompt);
+
+            %% Enter the dose values for each point
+            disp('Now enter the doses values in Gy (press return after each value)')
+
+            DosesValues = [];
+            for i =  1 : 1 : DosesPoints
+                prompt = 'Enter the dose value number  ' +  string(i) + ': ';
+                DosesValues(i) = input(prompt);
+            end
+
+            %% Load the background image and extract the RED channel
+            %
+            % Asks for opening an image
+            %
+            disp('Open the Background image')
+            [filename,user_canceled] = imgetfile;
+
+            % Read the image
+            %
+            BackgroundImage = imread(filename);
+
+            [BackgroundImageRedLayer] = ExtractRedChannelFromImage(BackgroundImage);
+
+            % Asks for a folder where save the red image of the background
+            %
+            disp('Choose where the red image has to be saved')
+
+            filter = {'*.TIFF'};
+            [filenameImage_red,user_canceled] = uiputfile(filter,...
+                'File Selection','Fondo.TIFF');
+
+            % Save the Background image in the red channel
+            %
+            imwrite(BackgroundImageRedLayer, convertCharsToStrings(filenameImage_red));
+            disp('The image has been saved in ' + convertCharsToStrings(filenameImage_red));
+
+            %% Open the red image, ROI it and extract information
+            %
+            disp('Open the Background red image')
+            [filename,user_canceled] = imgetfile;
+
+            % Read the background image
+            BackgrounImage = imread(filename);
+
+            % The following funtion was creted to extract the pixel values
+            % and the correposnding standard deviation from a ROI of a given image
+            %
+            [AveragePixelsValueBackground, StandardDeviationPixelsValueBackground] = ...
+                ExtractInformationFromImageROI(BackgrounImage);
+
+            %% Asks to open the calibration images and stores the ROI information
+            %
+            AveragePixelsValueCalibration = [];
+            StandardDeviationPixelsValueCalibration = [];
+
+            for i = 1 : 1 : DosesPoints
+                disp('Open the RCF corresponding to the Dose ' +  string(i) + ': ')
+                [filename,user_canceled] = imgetfile;
+
+                % Read the image
+                %
+                Image = imread(filename);
+                ImageBackground = ExtractRedChannelFromImage(Image);
+
+                [AveragePixelsValue, StandardDeviationPixelsValue] = ...
+                    ExtractInformationFromImageROI(ImageBackground);
+
+                AveragePixelsValueCalibration(i) = AveragePixelsValue;
+                StandardDeviationPixelsValueCalibration(i) = StandardDeviationPixelsValue;
+            end
+
+            %% Calculate the Net Optical Density
+            %
+            NetOpticalDensities = -log(AveragePixelsValueCalibration/AveragePixelsValueBackground);
+            %% Write in a file the Calibration points 
+            % (Doses and the NetOpticalDensities)
+            %
+            disp('Choose where the calibration data (Dose and NetOD) will be saved')
+
+            % Open a dialog box specifying the file name where to save the calibration
+            % data
+            % A default file name is given
+            %
+
+            % Asks to open a file where to write the calibration points
+            %
+            filter = {'*.txt'};
+            [filenameCalibrationCurve,user_canceled] = uiputfile(filter,...
+                'File Selection','CalibrationData.txt');
+
+            % Open the file just defined
+            %
+            fid = fopen(convertCharsToStrings(filenameCalibrationCurve), 'wt');
+
+            % Write the file with the calibration points
+            %
+            fprintf(fid, '%f %f\n', [DosesValues; NetOpticalDensities]);
+            fclose(fid);
+
+            %% Plot the calibration curve
+            %
+            PlotCalibrationCurve(NetOpticalDensities, DosesValues)
+
+            G = G + 1;
+
+        case 'x'
+            disp('The program has been terminated')
+            G = G + 1;
+        otherwise
+            disp('Insert a valid value')
+    end
+end
+
+
+
+
+##### SOURCE END #####
+--></body></html>

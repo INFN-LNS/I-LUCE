@@ -1,0 +1,15 @@
+Dose [ Gy ]       Net OD
+  1.00   0.15469200
+  2.00   0.21254100
+  3.00   0.25991900
+  4.00   0.31493200
+  5.00   0.35010900
+  6.00   0.38901600
+------------------------ 
+POLYNOMIAL FIT PARAMETERS 
+                   
+The FIT formula is: P3*X^3 + P2*X^2 + P1*X
+Values of the fit parameters:
+ P3=  -34.7011
+ P2=  55.0073
+ P1=  -0.72374
