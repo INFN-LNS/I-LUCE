@@ -26,6 +26,25 @@ set(h1, 'LineWidth',5,...
 h2 = plot(fitresult);
 set(h2, 'LineWidth',2)
 
+% Plot the confidence bounds 
+%
+% Extract the limits of the calculated coefficients
+%
+FitCoefficientBounds = confint(fitresult);
+P1_low = FitCoefficientBounds(1);
+P1_high = FitCoefficientBounds(2);
+P2_low = FitCoefficientBounds(3);
+P2_high = FitCoefficientBounds(4);
+P3_low = FitCoefficientBounds(5);
+P3_high = FitCoefficientBounds(6);
+
+% Create a X Data series
+% 
+xDataNew = linspace(min(xData), max(xData));
+
+fit_high = P3_high*xDataNew.^3 + P2_high*xDataNew.^2 + P1_high*xDataNew;
+h3 = plot(xDataNew, fit_high);
+
 % Fix only the lower limit 
 %
 xlim([0,inf]);
@@ -60,8 +79,11 @@ hold(axes1,'off');
 %
 set(axes1,'FontSize',18, 'LineWidth', 2); 
 
+
+
 % Add the information of the fit result inside the plot
-% 
+% This shall be moved in the plot header
+%
 txt = strcat('The fit equation is: P3*X^3 + P2*X^2 + P1*X');
 txt1 = strcat('P3 =  ', num2str(fitresult.P3));
 txt2 = strcat('P2 =  ', num2str(fitresult.P2));
