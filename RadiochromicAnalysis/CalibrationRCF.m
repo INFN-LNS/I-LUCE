@@ -4,7 +4,7 @@
 % Procedure for the calibration in dose of radiochromic films
 %
 
-%% Close and clean all variables and pictures
+%% Close and clean all variables and pictures.
 %
 clear all
 close all
