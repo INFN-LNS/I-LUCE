@@ -2,7 +2,6 @@ clear all;
 close all;
 
 %% Carico il file con la matrice degli stopping power
-%
 
 StoppingPowerMatrix=load('StoppingPowerMatrix_64MeV.mat'); 
 
