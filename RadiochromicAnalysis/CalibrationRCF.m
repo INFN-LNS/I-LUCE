@@ -162,17 +162,17 @@ while G == 0
             % PlotCalibrationCurve(NetOpticalDensities, DosesValues) and
             % makes a 3rd order polynomial fit
             %
-            [yFit, p, x0, y0] = RCFPolynomialFit(NetOpticalDensities, DosesValues);
+            [fitresult, gof] = RCFPolynomialFit(NetOpticalDensities, DosesValues);
             
             % Plot the calibration data toegheter with the polynomial fit
             % curve and make a separate plot with the residuals
             %
-            PlotCalibrationAndFit(NetOpticalDensities, DosesValues, yFit,p, x0, y0)
+            PlotCalibrationAndFit(NetOpticalDensities, DosesValues, fitresult)
 
             % Write the calibration data and the results from the
             % polynomial fit in a dingle text file
             %
-            WriteDataAndFitParameters(DosesValues, NetOpticalDensities, p)
+            WriteDataAndFitParameters(DosesValues, NetOpticalDensities, fitresult)
 
             G = G + 1;
 
