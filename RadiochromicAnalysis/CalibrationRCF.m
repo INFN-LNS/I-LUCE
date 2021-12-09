@@ -1,5 +1,5 @@
 % GAP Cirrone, November 2021
-% Last revision: November 2021
+% Last revision: December 2021
 %
 % Procedure for the calibration in dose of radiochromic films
 %
@@ -18,6 +18,7 @@ G = 0;
 while G == 0
     disp('Have you a calibration already acquired?')
     disp('y/n or press x to exit')
+    
     P = input('Enter answer: ', 's');
     switch P
         case 'y'
@@ -49,9 +50,23 @@ while G == 0
         case 'n'
                 disp('Have you a file with the doses list?')
                 disp('y/n or press x to exit')
+                
                 Q = input('Enter answer: ', 's');
                 if Q == 'y'
                         disp('STI CAZZI E CARICA IL FILE')
+                        disp('Please, load a file with the dose values');
+                        
+                        filter = {'*.txt'};
+                        [filenameDoseValuesForCalibration, path] = uigetfile(filter,...
+                            'File Selection','DoseValuesForCalibration.txt');
+                        
+                        % Open the file just called
+                        %
+                        pathForDoseValuesForCalibration = strcat(path, filenameDoseValuesForCalibration);
+                        
+                        DoseValues = load(pathForDoseValuesForCalibration);
+                        
+                        return
                 end
                 if Q == 'n'
                         %% Asks for the number of dose points
@@ -60,7 +75,7 @@ while G == 0
                         DosesPoints = input(prompt);
 
                         %% Enter the dose values for each point
-                        disp('Now enter the doses values in Gy (press return after each value)')
+                        disp('Now, enter the doses values in Gy (press return after each value)')
 
                         DosesValues = [];
                         for i =  1 : 1 : DosesPoints
