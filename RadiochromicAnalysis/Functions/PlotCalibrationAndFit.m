@@ -92,7 +92,7 @@ hold(axes1,'off');
 
 % Set the remaining axes properties
 %
-set(axes1,'FontSize',18, 'LineWidth', 2); 
+set(axes1,'FontSize',14, 'LineWidth', 2); 
 
 % Add the information of the fit result in the plot title
 % This shall be moved in the plot header
