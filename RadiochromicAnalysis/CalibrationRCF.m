@@ -46,16 +46,17 @@ while G == 0
             G = G + 1;
 
         case 'n'
-            % Enter in the case 'n' when a previous calibration 
+            % Enter in the case 'n' a previous calibration 
             % is not present and data must be acquired 
             % reading a set of irradiated RCF
             %
-            disp('Have you a file with the doses list?')
+            disp('Have you a file containing a list of calibration doses?')
             disp('y/n or press x to exit')
 
             Q = input('Enter answer: ', 's');
             if Q == 'y'
-                % Here a file with the calibration dose values can be used
+                % Here a file with the calibration dose values can be
+                % uploaded
                 %
                 disp('Please, load a file with the dose values');
                 filter = {'*.txt'};
@@ -71,8 +72,7 @@ while G == 0
                 DoseValues = load(pathForDoseValuesForCalibration);
                 DosesPoints = length(DoseValues);
                 
-                % ===================================================
-                 %% Load the background image and extract the RED channel
+                %Load the background image and extract the RED channel
                 %
                 % Asks for opening an image
                 %
