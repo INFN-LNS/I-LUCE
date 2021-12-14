@@ -26,22 +26,22 @@ while G == 0
         case 'y'
             % Open and read an old calibration file
             %
-            [DosesValues,NetOpticalDensities] = OpenAndReadCalibrationCurve();
+            [DoseValues,NetOpticalDensities] = OpenAndReadCalibrationCurve();
 
             % PlotCalibrationCurve(NetOpticalDensities, DosesValues) and
             % makes a 3rd order polynomial fit
             %
-            [fitresult, gof] = RCFPolynomialFit(NetOpticalDensities, DosesValues);
+            [fitresult, gof] = RCFPolynomialFit(NetOpticalDensities, DoseValues);
 
             % Plot the calibration data toegheter with the polynomial fit
             % curve and make a separate plot with the residuals
             %
-            PlotCalibrationAndFit(NetOpticalDensities, DosesValues, fitresult)
+            PlotCalibrationAndFit(NetOpticalDensities, DoseValues, fitresult)
 
             % Write the calibration data and the results from the
             % polynomial fit in a dingle text file
             %
-            WriteDataAndFitParameters(DosesValues, NetOpticalDensities, fitresult)
+            WriteDataAndFitParameters(DoseValues, NetOpticalDensities, fitresult)
 
             G = G + 1;
 

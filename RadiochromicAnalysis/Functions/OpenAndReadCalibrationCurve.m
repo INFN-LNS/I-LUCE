@@ -1,4 +1,4 @@
-function [DosesValues,NetOpticalDensities] = OpenAndReadCalibrationCurve()
+function [DoseValues, NetOpticalDensities] = OpenAndReadCalibrationCurve()
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -8,10 +8,11 @@ function [DosesValues,NetOpticalDensities] = OpenAndReadCalibrationCurve()
 % Columns 2 is the NET Optical density already calculated
 % The file must be written with this same script
 filter = {'*.txt'};
-[AcquiredCalibrationCurve, user_canceled] = uigetfile(filter,...
+[AcquiredCalibrationCurve, path] = uigetfile(filter,...
     'File Selection','CalibrationData.txt');
-ReadCalibrationCurve = load(convertCharsToStrings(AcquiredCalibrationCurve));
-DosesValues = ReadCalibrationCurve(:,1);
+
+ReadCalibrationCurve = load(strcat(path,AcquiredCalibrationCurve));
+DoseValues = ReadCalibrationCurve(:,1);
 NetOpticalDensities = ReadCalibrationCurve(:,2);
 
 

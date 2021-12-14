@@ -6,7 +6,7 @@ xData = NetOpticalDensities;
 yData = DosesValues;
 
 % Create figure
-figure1 = figure('Name','3rd polynomial fit','Color',[1 1 1], 'Position', [10 10 1100 800]);
+figure1 = figure('Name','3rd order polynomial fit','Color',[1 1 1], 'Position', [10 10 1100 800]);
 
 % Create axes
 axes1 = axes('Parent',figure1);
@@ -57,10 +57,6 @@ inBetween = [fit_low, fliplr(fit_high)];
 
 fill(x2, inBetween, 'black','FaceAlpha', '0.1');
 
-% Fix only the lower limit 
-%
-%xlim([0,inf]);
-%ylim([0,inf]);
 
 % legend of the plot
 %
@@ -92,7 +88,7 @@ hold(axes1,'off');
 
 % Set the remaining axes properties
 %
-set(axes1,'FontSize',14, 'LineWidth', 2); 
+set(axes1,'FontSize',12, 'LineWidth', 2); 
 
 % Add the information of the fit result in the plot title
 % This shall be moved in the plot header
