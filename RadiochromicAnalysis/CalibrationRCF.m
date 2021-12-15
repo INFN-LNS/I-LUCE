@@ -182,7 +182,7 @@ while G == 0
                 % Write the calibration data and the results from the
                 % polynomial fit in a dingle text file
                 %
-                WriteDataAndFitParameters(DoseValues, NetOpticalDensities', fitresult)
+                WriteDataAndFitParameters(DoseValues', NetOpticalDensities, fitresult)
             end
                 
                

@@ -1,4 +1,4 @@
-function [filenameCalibrationCurveAndFit] = WriteDataAndFitParameters(DosesValues, NetOpticalDensities, fitresult)
+function [filenameCalibrationCurveAndFit] = WriteDataAndFitParameters(DoseValues, NetOpticalDensities, fitresult)
 %UNTITLED6 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -24,7 +24,7 @@ fid = fopen(pathForCalibrationCurveAndFitParameters, 'wt');
 % Write the file with the calibration points and FIT results
 %
 fprintf(fid,'%6s %12s\n','Dose [ Gy ]','Net OD');
-fprintf(fid, '%6.2f %12.8f\n',[DosesValues; NetOpticalDensities]);
+fprintf(fid, '%f %f\n',[DoseValues; NetOpticalDensities]);
 fprintf(fid, '%12s\n', '------------------------ ');
 fprintf(fid, '%12s\n', 'POLYNOMIAL FIT PARAMETERS ');
 fprintf(fid, '%12s\n', '                   ');
