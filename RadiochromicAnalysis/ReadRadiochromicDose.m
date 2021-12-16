@@ -33,7 +33,8 @@ while G == 0
 %
 % Procedure for the extraction of the dose
 % 1.- Open a file with a RCF image
-% 2.- Extract the average pixel values of a given ROI
+% 2.- Extract the average pixel values of a given ROI for the RED channel
+% of the image
 % 3.- Calculate the 'net Optical density' (netOD) divinding the average value in
 % the ROI by the background
 % 4.- Insert the netOD in the polynomial formula to extract the correct
