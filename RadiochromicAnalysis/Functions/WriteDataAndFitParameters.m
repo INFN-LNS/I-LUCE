@@ -1,4 +1,10 @@
-function [filenameCalibrationCurveAndFit] = WriteDataAndFitParameters(DoseValues, NetOpticalDensities, fitresult)
+function [filenameCalibrationCurveAndFit] = ...
+    WriteDataAndFitParameters(DoseValues,...
+    NetOpticalDensities,...
+    fitresult,...
+    AveragePixelsValueBackground)
+
+
 %UNTITLED6 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -29,7 +35,8 @@ fprintf(fid, '%f %f %f\n',[fitresult.P1, fitresult.P2, fitresult.P3]);
 fprintf(fid, '\n')
 fprintf(fid,'%6s %6s\n','Dose [ Gy ]','Net OD');
 fprintf(fid, '%f %f\n',[DoseValues, NetOpticalDensities]'); 
-fprintf(fid, '%3s', 'end');
+fprintf(fid, '%16s\n', 'Background value');
+fprintf(fid, '%6f', AveragePixelsValueBackground);
 fclose(fid);
 end
 
