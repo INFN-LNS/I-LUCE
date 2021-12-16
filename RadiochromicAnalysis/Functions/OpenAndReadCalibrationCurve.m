@@ -7,6 +7,7 @@ function [DoseValues, NetOpticalDensities] = OpenAndReadCalibrationCurve()
 % Column 1 is the dose
 % Columns 2 is the NET Optical density already calculated
 % The file must be written with this same script
+%
 filter = {'*.txt'};
 [AcquiredCalibrationCurve, path] = uigetfile(filter,...
     'File Selection','CalibrationData.txt');
