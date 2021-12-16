@@ -22,34 +22,48 @@ while G == 0
 
     switch P
         case 'y'
-%% Read the calibration file with Doses, net Opetical Densities and Fit parameters.
-% these info comes from the procedure that read the calibration films and
-% perform the polynomial fit
-%
-[FitParameters, Doses, NetOpticalDensities] = ReadCalibrationDataAndFitParameter();
+            disp('Open the file with the calibration data and fit parameters.')
+
+            %% Read the calibration file with Doses, net Opetical Densities and Fit parameters.
+            % these info comes from the procedure that read the calibration films and
+            % perform the polynomial fit
+            %
+            [FitParameters, Doses, NetOpticalDensities, BackgroundValue] = ReadCalibrationDataAndFitParameter();
+
+            disp('Open one RCF image.')
+            [filename,user_canceled] = imgetfile;
+
+            % Read the image
+            %
+            Image = imread(filename);
+            ImageRed = ExtractRedChannelFromImage(Image);
+
+            [AveragePixelsValue, StandardDeviationPixelsValue] = ...
+                ExtractInformationFromImageROI(ImageRed);
 
 
-%% Extraction of the dose value
-%
-% Procedure for the extraction of the dose
-% 1.- Open a file with a RCF image
-% 2.- Extract the average pixel values of a given ROI for the RED channel
-% of the image
-% 3.- Calculate the 'net Optical density' (netOD) divinding the average value in
-% the ROI by the background
-% 4.- Insert the netOD in the polynomial formula to extract the correct
-% dose value
+
+            %% Extraction of the dose value
+            %
+            % Procedure for the extraction of the dose
+            % 1.- Open a file with a RCF image
+            % 2.- Extract the average pixel values of a given ROI for the RED channel
+            % of the image
+            % 3.- Calculate the 'net Optical density' (netOD) divinding the average value in
+            % the ROI by the background
+            % 4.- Insert the netOD in the polynomial formula to extract the correct
+            % dose value
 
 
 
-G = G + 1;
+            G = G + 1;
 
- case 'n'
-    disp('Enter the three fit parameters in the order P1, P2 and P3')
+        case 'n'
+            disp('Enter the three fit parameters in the order P1, P2 and P3')
 
-    G = G + 1;
+            G = G + 1;
 
-    case 'x'
+        case 'x'
             disp('The program has been terminated')
             G = G + 1;
         otherwise

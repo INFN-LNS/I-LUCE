@@ -1,4 +1,4 @@
-function [FitParameters, Doses, NetOpticalDensities] = ReadCalibrationDataAndFitParameter()
+function [FitParameters, Doses, NetOpticalDensities, BackgroundValue] = ReadCalibrationDataAndFitParameter()
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
