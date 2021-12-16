@@ -10,18 +10,24 @@ filter = {'*.txt'};
 % Open the file just called
 %
 pathForCalibrationAndFitParameters = strcat(path, FileNameCalibrationAndFitParameters);
+
 % open the file
+%
 fid=fopen(pathForCalibrationAndFitParameters); 
 
-line = 5;
-FitParameters = textscan(fid,'%f %f %f', 1, 'Delimiter', '', 'WhiteSpace', '', 'headerlines',line-1);  % Read 2 header lines
-DosesAndONetpticalDensities = textscan(fid,'%f%f', 'Delimiter',{'','\n'}, 'headerlines',3);
+FitParameters = textscan(fid,'%12.f%12.f%12.f', 'Delimiter','', 'headerlines',4);  
+
+
+BackgroundValue = textscan(fid,'%12.f', 'headerlines',1);
+DosesAndONetpticalDensities = textscan(fid,'%12.f%12.f', 'Delimiter','', 'headerlines',1);
+
 
 % Extraction from the cells the vector with the elevant data
 %
 FitParameters = [FitParameters{1} FitParameters{3} FitParameters{3}]';
 Doses = DosesAndONetpticalDensities{1}(:);
 NetOpticalDensities = DosesAndONetpticalDensities{2}(:);
+BackgroundValue = BackgroundValue{1};
 
 fclose(fid);
 
