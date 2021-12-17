@@ -1,5 +1,5 @@
 function [AveragePixelsValue,StandardDeviationPixelsValue, ...
-    HorizontalDimension, VerticalDimension] = ExtractInformationFromImageROI(Image)
+    HorizontalDimensionInPixels, VerticalDimensionInPixels] = ExtractInformationFromImageROI(Image)
 
 % ExtractInformationFromImageROI: Extract relevant information from an image ROI
 %
@@ -34,8 +34,8 @@ Vertex2 = round(ImageROI.Vertices(2,:));
 Vertex3 = round(ImageROI.Vertices(3,:));
 Vertex4 = round(ImageROI.Vertices(4,:));
 
-HorizontalDimension = round(ImageROI.Vertices(3,1)) - round(ImageROI.Vertices(2,1));
-VerticalDimension =  round(ImageROI.Vertices(3,2)) - round(ImageROI.Vertices(1,2));
+HorizontalDimensionInPixels = round(ImageROI.Vertices(3,1)) - round(ImageROI.Vertices(2,1));
+VerticalDimensionInPixels =  round(ImageROI.Vertices(3,2)) - round(ImageROI.Vertices(1,2));
 
 
 

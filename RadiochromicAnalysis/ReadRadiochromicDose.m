@@ -41,7 +41,10 @@ while G == 0
             Image = imread(filename);
             ImageRed = ExtractRedChannelFromImage(Image);
 
-            [AveragePixelsValue, StandardDeviationPixelsValue] = ...
+            [AveragePixelsValue, ...
+                StandardDeviationPixelsValue,...
+                HorizontalDimension,...
+                VerticalDimension] = ...
                 ExtractInformationFromImageROI(ImageRed);
 
             %% Calculation of the Net Optical Density 
@@ -53,17 +56,7 @@ while G == 0
             Dose = FitParameters(3)*NetOpticalDensity.^3 + ...
                 FitParameters(2)*NetOpticalDensities.^2 + ...
                 FitParameters(1)*NetOpticalDensities;
-             
-            %% Extraction of the dose value
-            %
-            % Procedure for the extraction of the dose
-            % 1.- Open a file with a RCF image
-            % 2.- Extract the average pixel values of a given ROI for the RED channel
-            % of the image
-            % 3.- Calculate the 'net Optical density' (netOD) divinding the average value in
-            % the ROI by the background
-            % 4.- Insert the netOD in the polynomial formula to extract the correct
-            % dose value
+     
 
             G = G + 1;
 
@@ -102,7 +95,10 @@ while G == 0
             Image = imread(filename);
             ImageRed = ExtractRedChannelFromImage(Image);
 
-            [AveragePixelsValue, StandardDeviationPixelsValue] = ...
+            [AveragePixelsValue, ...
+                StandardDeviationPixelsValue,...
+                HorizontalDimensionInPixels,...
+                VerticalDimensionInPixels] = ...
                 ExtractInformationFromImageROI(ImageRed);
 
             %% Calculation of the Net Optical Density 
@@ -116,6 +112,21 @@ while G == 0
                 FitParametersAsInput(1)*NetOpticalDensity;
 
             disp('The stimated dose is ' + string(Dose) + ' CGy')
+
+            % DPI (dots per inch) of the scanned image
+            %
+            DPI = 600;
+            % Pixel dimension in cm
+            %
+            pixelDimension = 2.54/600;
+            
+            % Surface of the ROI over which the dose was calculated in cm2
+            %
+            ROISurface = HorizontalDimensionInPixels*pixelDimension*VerticalDimensionInPixels*pixelDimension;
+
+            disp('The ROI surface is: ' + string(ROISurface) + ' cm2')
+
+            
 
 
             G = G + 1;
