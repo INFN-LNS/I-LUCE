@@ -15,8 +15,7 @@ pathForCalibrationAndFitParameters = strcat(path, FileNameCalibrationAndFitParam
 %
 fid=fopen(pathForCalibrationAndFitParameters); 
 
-FitParameters = textscan(fid,'%12.f%12.f%12.f', 'Delimiter','', 'headerlines',4);  
-
+FitParameters = textscan(fid,'%f%f%f', 'Delimiter','','headerlines',4);  
 
 BackgroundValue = textscan(fid,'%12.f', 'headerlines',1);
 DosesAndONetpticalDensities = textscan(fid,'%12.f%12.f', 'Delimiter','', 'headerlines',1);
