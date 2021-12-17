@@ -75,7 +75,7 @@ while G == 0
                 FitParametersAsInput(i) = FitParameter;
             end
 
-            BackgroundValueAsInput = input('Now eneter the measured value of the background');
+            BackgroundValueAsInput = input('Now eneter the measured value of the background: ');
 
 
              %% Open the image to be analised
@@ -101,6 +101,8 @@ while G == 0
             Dose = FitParametersAsInput(3)*NetOpticalDensity.^3 + ...
                 FitParametersAsInput(2)*NetOpticalDensity.^2 + ...
                 FitParametersAsInput(1)*NetOpticalDensity;
+
+            disp('The stimated dose is ' + string(Dose) + ' CGy')
 
 
             G = G + 1;
