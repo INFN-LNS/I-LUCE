@@ -41,8 +41,16 @@ while G == 0
             [AveragePixelsValue, StandardDeviationPixelsValue] = ...
                 ExtractInformationFromImageROI(ImageRed);
 
+            %% Calculation of the Net Optical Density 
+            %
+            NetOpticalDensity = -log10(AveragePixelsValue/BackgroundValue);
 
-
+            %% Extraction of the dose value using the fit parameters
+            %
+            Dose = FitParameters(3)^3*NetOpticalDensity + ...
+                FitParameters(2)*NetOpticalDensities^2 + ...
+                FitParameters(1)*NetOpticalDensities;
+             
             %% Extraction of the dose value
             %
             % Procedure for the extraction of the dose
