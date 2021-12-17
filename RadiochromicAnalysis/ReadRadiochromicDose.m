@@ -75,12 +75,25 @@ while G == 0
                 FitParametersAsInput(i) = FitParameter;
             end
 
-            BackgroundValueAsInput = input('Now eneter the measured value of the background: ');
+            %% Measure of the background
+            %
+            disp('Open one RCF image to measure the background.')
+            [filename,user_canceled] = imgetfile;
+
+            % Read the image
+            %
+            Image = imread(filename);
+            ImageRed = ExtractRedChannelFromImage(Image);
+
+            [MeasuredAverageBackground, StandardDeviationPixelsValueBackground] = ...
+                ExtractInformationFromImageROI(ImageRed);
+
+
+ %           BackgroundValueAsInput = input('Now eneter the measured value of the background: ');
 
 
              %% Open the image to be analised
              %
-
             disp('Open one RCF image.')
             [filename,user_canceled] = imgetfile;
 
@@ -94,7 +107,7 @@ while G == 0
 
             %% Calculation of the Net Optical Density 
             %
-            NetOpticalDensity = -log10(AveragePixelsValue/BackgroundValueAsInput);
+            NetOpticalDensity = -log10(AveragePixelsValue/MeasuredAverageBackground);
 
             %% Extraction of the dose value using the fit parameters
             %
