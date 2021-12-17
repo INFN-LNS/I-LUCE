@@ -124,7 +124,7 @@ while G == 0
             %
             ROISurface = HorizontalDimensionInPixels*pixelDimension*VerticalDimensionInPixels*pixelDimension;
 
-            disp('The ROI surface is: ' + string(ROISurface) + ' cm2')
+            disp('ROI surface over which the dose is calculated: ' + string(ROISurface) + ' cm2')
 
             
 
