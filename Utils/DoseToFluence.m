@@ -1,4 +1,5 @@
-% Fluence [cm-2] from dose [Gy]
+% Dose [Gy] to Fluence [cm-2] conversion for a given particle
+% for a given stopping power
 %
 
 % Dose in Gy
@@ -7,7 +8,8 @@ Dose = input('Insert a dose value in Gy ');
 
 % Stopping power in MeV*cm2/g
 %
-StoppingPower = 146.5;
+%StoppingPower = 95.89; %@3.9 MeV  in Water
+StoppingPower = 75.59; %@5.3 MeV  in Water
 
 % Converting the stopping power in J*cm2/Kg
 %
