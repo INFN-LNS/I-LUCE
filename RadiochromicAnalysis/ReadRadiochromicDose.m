@@ -24,11 +24,21 @@ while G == 0
         case 'y'
             disp('Open the file with the calibration data and fit parameters.')
 
-            %% Read the calibration file with Doses, net Opetical Densities and Fit parameters.
+            %% Read the calibration file with Doses, net Optical Densities and Fit parameters.
             % these info comes from the procedure that read the calibration films and
             % perform the polynomial fit
             %
-            [FitParameters, Doses, NetOpticalDensities, BackgroundValue] = ReadCalibrationDataAndFitParameter();
+            filter = {'*.txt'};
+            [FileNameCalibrationDataAndFit, path] = uigetfile(filter,...
+                    'File Selection','CalibrationDataAndFit.txt');
+
+                % Open the file just called
+                %
+                pathForCalibrationDataAndFit = strcat(path, FileNameCalibrationDataAndFit);
+
+                [P1, P2, P3, BackgroundValue,...
+                    Doses,...
+                    NetOpticalDensities] = ReadCalibrationDataAndFit(pathForCalibrationDataAndFit);
 
             %% Open the image to be analised
             %
@@ -53,11 +63,10 @@ while G == 0
 
             %% Extraction of the dose value using the fit parameters
             %
-            Dose = FitParameters(3)*NetOpticalDensity.^3 + ...
-                FitParameters(2)*NetOpticalDensities.^2 + ...
-                FitParameters(1)*NetOpticalDensities;
+            Dose = P3*NetOpticalDensity.^3 + ...
+                P2*NetOpticalDensity.^2 + ...
+                P1*NetOpticalDensity;
      
-
             G = G + 1;
 
         case 'n'
