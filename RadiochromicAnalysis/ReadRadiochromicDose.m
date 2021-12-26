@@ -27,7 +27,7 @@ while G == 0
             %% Read the calibration file with Doses, net Optical Densities and Fit parameters.
             % these info comes from the procedure that read the calibration films and
             % perform the polynomial fit
-            %
+            %y
             filter = {'*.txt'};
             [FileNameCalibrationDataAndFit, path] = uigetfile(filter,...
                     'File Selection','CalibrationDataAndFit.txt');
@@ -39,6 +39,20 @@ while G == 0
                 [P1, P2, P3, BackgroundValue,...
                     Doses,...
                     NetOpticalDensities] = ReadCalibrationDataAndFit(pathForCalibrationDataAndFit);
+            %% Measure of the background
+            %
+            disp('Open one RCF image to measure the background.')
+            [filename,user_canceled] = imgetfile;
+
+            % Read the image
+            %
+            Image = imread(filename);
+            ImageRed = ExtractRedChannelFromImage(Image);
+
+            [MeasuredAverageBackground, StandardDeviationPixelsValueBackground] = ...
+                ExtractInformationFromImageROI(ImageRed);
+
+
 
             %% Open the image to be analised
             %
@@ -59,13 +73,16 @@ while G == 0
 
             %% Calculation of the Net Optical Density 
             %
-            NetOpticalDensity = -log10(AveragePixelsValue/BackgroundValue);
+            NetOpticalDensity = -log10(AveragePixelsValue/MeasuredAverageBackground);
 
             %% Extraction of the dose value using the fit parameters
             %
             Dose = P3*NetOpticalDensity.^3 + ...
                 P2*NetOpticalDensity.^2 + ...
                 P1*NetOpticalDensity;
+
+             disp('The stimated dose is ' + string(Dose) + ' cGy')
+
      
             G = G + 1;
 
@@ -114,13 +131,13 @@ while G == 0
             %
             NetOpticalDensity = -log10(AveragePixelsValue/MeasuredAverageBackground);
 
-            %% Extraction of the dose value using the fit parameters
+            %% Extraction of the dose (in cGy) value using the fit parameters
             %
             Dose = FitParametersAsInput(3)*NetOpticalDensity.^3 + ...
                 FitParametersAsInput(2)*NetOpticalDensity.^2 + ...
                 FitParametersAsInput(1)*NetOpticalDensity;
 
-            disp('The stimated dose is ' + string(Dose) + ' CGy')
+            disp('The stimated dose is ' + string(Dose) + ' cGy')
 
             % DPI (dots per inch) of the scanned image
             %
@@ -136,8 +153,6 @@ while G == 0
             disp('ROI surface over which the dose is calculated: ' + string(ROISurface) + ' cm2')
 
             
-
-
             G = G + 1;
 
         case 'x'
