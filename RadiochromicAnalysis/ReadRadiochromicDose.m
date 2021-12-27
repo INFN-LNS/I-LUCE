@@ -52,6 +52,7 @@ while G == 0
             [MeasuredAverageBackground, StandardDeviationPixelsValueBackground] = ...
                 ExtractInformationFromImageROI(ImageRed);
 
+            disp('The measured average background is: ' + string(MeasuredAverageBackground));
 
 
             %% Open the image to be analised

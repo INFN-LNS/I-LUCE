@@ -10,6 +10,7 @@ Dose = input('Insert a dose value in Gy ');
 %
 %StoppingPower = 95.89; %@3.9 MeV  in Water
 StoppingPower = 75.59; %@5.3 MeV  in Water
+StoppingPower = 75.59; %@6.5 MeV  in Water
 
 % Converting the stopping power in J*cm2/Kg
 %
