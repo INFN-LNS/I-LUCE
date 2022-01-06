@@ -68,8 +68,8 @@ while G == 0
 
             [AveragePixelsValue, ...
                 StandardDeviationPixelsValue,...
-                HorizontalDimension,...
-                VerticalDimension] = ...
+                HorizontalDimensionInPixels,...
+                VerticalDimensionInPixels] = ...
                 ExtractInformationFromImageROI(ImageRed);
 
             %% Calculation of the Net Optical Density 
@@ -83,6 +83,20 @@ while G == 0
                 P1*NetOpticalDensity;
 
              disp('The stimated dose is ' + string(Dose) + ' cGy')
+
+            % DPI (dots per inch) of the scanned image
+            %
+            DPI = 600;
+            % Pixel dimension in cm
+            %
+            pixelDimension = 2.54/600;
+            
+            % Surface of the ROI over which the dose was calculated in cm2
+            %
+            ROISurface = HorizontalDimensionInPixels*pixelDimension*VerticalDimensionInPixels*pixelDimension;
+
+            disp('ROI surface over which the dose is calculated: ' + string(ROISurface) + ' cm2')
+
 
      
             G = G + 1;
