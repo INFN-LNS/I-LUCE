@@ -9,8 +9,8 @@ Dose = input('Insert a dose value in Gy ');
 
 % INPUT
 %
-Target_DetectorDistance = 9.5; % in cm
-ROISurface = 0.006; % in cm2
+Target_DetectorDistance = 9.5; % in cm 
+ROISurface = 0.006; % incm2
 
 % Stopping power in MeV*cm2/g
 
