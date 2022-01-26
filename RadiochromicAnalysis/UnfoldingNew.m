@@ -7,6 +7,7 @@
 % % % 4 - Correzione del codice sul calcolo della dose (Cristina) e versione attuale senza calibrazione - 2022
 
 %% 
+% cacca
 clear all
 close all
 
