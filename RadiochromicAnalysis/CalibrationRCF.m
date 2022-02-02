@@ -327,7 +327,7 @@ while G == 0
                 % Write the calibration data and the results from the
                 % polynomial fit in a dingle text file
                 %
-                WriteDataAndFitParameters(DosesValues, NetOpticalDensities, fitresult)
+		  WriteDataAndFitParameters(DosesValues, NetOpticalDensities, fitresult,AveragePixelsValueBackground)
             end
         case 'x'
             disp('The program has been terminated')
