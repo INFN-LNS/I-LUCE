@@ -1,6 +1,6 @@
 %% Read signals from oscilloscope 1
  
-TOF_Scope1=textread('/Users/Beatrice/Desktop/UNIVERSITA/MAGISTRALE/TESI MAGISTRALE/analisi dati/TOF/TOF_DATA/05112020/Scope1/Scope1_56028.csv', '', 'delimiter', ',', ... 
+TOF_Scope1=textread('/Users/Beatrice/Desktop/Dottorato/MAGISTRALE/PALS2020/analisi dati/TOF/TOF_DATA/05112020/Scope1/Scope1_56028.csv', '', 'delimiter', ',', ... 
                 'headerlines',0,'emptyvalue', NaN);
             
    Ch1_1(:,1)=TOF_Scope1(:,1);
