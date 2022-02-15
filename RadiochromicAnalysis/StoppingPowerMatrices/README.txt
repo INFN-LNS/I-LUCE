@@ -6,5 +6,10 @@ Ogni FILE.mat contiene a sua volta 4 file:
 
 NomeFile.mat		Spiegazione del file.mat
 
-40umAl_HDV2_70MeV	--> Configurazione: 40um di Al + stack di HDV2 sufficiente a fermare 70 MeV
-45umAl_EBT3_20MeV	--> Configurazione: 45um di Al + stack di EBT3 sufficiente a fermare 20 MeV
+40umAl_HDV2_70MeV → Configurazione: 40um di Al + stack di HDV2 sufficiente a fermare 70 MeV
+45umAl_EBT3_20MeV → Configurazione: 45um di Al + stack di EBT3 sufficiente a fermare 20 MeV
+40umAl_HDV2_70MeV → Configurazione: 40um di Al + stack di HDV2 sufficiente a fermare 70 MeV
+40umAl_EBT3_20MeV → Configurazione: 40um di Al + stack di EBT3 sufficiente a fermare 20 MeV
+15umAl_EBT3_20MeV → Configurazione: 15um di Al + stack di EBT3 sufficiente a fermare 20 MeV
+15umAl_HDV2_20MeV → Configurazione: 15um di Al + stack di HDV2 sufficiente a fermare 20 MeV
+45umAl_HDV2_20MeV → Configurazione: 45um di Al + stack di HDV2 sufficiente a fermare 20 MeV
