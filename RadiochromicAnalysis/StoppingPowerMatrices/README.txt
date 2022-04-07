@@ -21,4 +21,4 @@ NomeFile.mat		Spiegazione del file.mat
 
 
 0umAl_EBT3_12C_840MeV → Config.: 0um di Al + stack di EBT3 sufficiente a fermare 840 MeV di 12C
-
+0umAl_EBT3_4He_280MeV → Config.: 0um di Al + stack di EBT3 sufficiente a fermare 280 MeV di 4HeC
