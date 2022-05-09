@@ -13,13 +13,13 @@ close all
 
 %% Load of the stopping power matrix and definition of some constant values
 
-MatrixSP=load('40umAl_HDV2_70MeV.mat'); 
+MatrixSP=load('0umAl_EBT3_70MeV.mat'); 
 
-S='HDV20';
+S='EBT30';
 Type='.tif';
 Zero='0';
 
-DPI=600;
+DPI=150; % 600 PER ELI
 PxcmFactor=2.54/DPI; %dimensione di un pixel in cm
 Spot_cm2=pi*(0.75^2); % sezione trasversale del fascio in cm2 usando un collimatore con diametro da 15 mm
 Spot_px=Spot_cm2/(PxcmFactor^2); % sezione trasversale del fascio in #pixel usando un collimatore con diametro da 15 mm
@@ -228,19 +228,19 @@ Dose_letta_GAF=GafParameter(:,1)./GafParameter(:,2); % cGy/pixel --> è il valor
 %%%%%%% Conversione GAF ==> H2O
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Strato_Attivo=195; % um di acqua
-% s=0;
-% for i=1:TotStack
-%     Spessore(i,1)=Strato_Attivo+s*355;  % per EBT3
-%     s=s+1;
-% end
-
-Strato_Attivo=15; % um di acqua
+Strato_Attivo=195; % um di acqua
 s=0;
 for i=1:TotStack
-    Spessore(i,1)=Strato_Attivo+s*150;    % per HDV2
+    Spessore(i,1)=Strato_Attivo+s*355;  % per EBT3
     s=s+1;
 end
+
+% Strato_Attivo=15; % um di acqua
+% s=0;
+% for i=1:TotStack
+%     Spessore(i,1)=Strato_Attivo+s*150;    % per HDV2
+%     s=s+1;
+% end
 
 %%
 close all
