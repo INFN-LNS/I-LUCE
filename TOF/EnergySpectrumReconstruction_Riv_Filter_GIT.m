@@ -1,3 +1,6 @@
+% Oggi Ferdinanda comincia a lavorare su questo script
+
+
 %% Experimental data 
 data = textread('/Users/giulianamilluzzo/Work/PALS2017_2016/shot7/shot7/C4shot100000.txt', '', 'delimiter', '.', ... 
                 'headerlines',6,'emptyvalue', NaN);
