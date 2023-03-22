@@ -9,6 +9,7 @@
 % Spessore filtro alluminio=6.5 um Al
 % Attenuatore=20 DB
 
+% Inserisci il percorso al file dei dati da analizzare
 data = textread('/Users/Ferdi/OneDrive/Documenti/MATLAB/DatiProva Spettro/ConFiltroCheSiFermano/C1shot100000.txt', '', 'delimiter', '.', ... 
                 'headerlines',6,'emptyvalue', NaN);
 
@@ -22,25 +23,25 @@ if  strcmp(S,'SiC')
 figure;
 plot(data(:,1)*10^9,smooth(data(:,2)*dB,20));
 xlim([8000 9500])
-Eg=7.78*10^-6 %% [MeV] electron-hole pair energy creation 13 eV for Diamond, 7.78 for SiC 
-S_d=1*10^-2; %% [cm^2]-> Area rivelatore
+Eg=7.78*10^-6   %% [MeV] electron-hole pair energy creation 7.78 eV for SiC 
+S_d=1*10^-2;    %% [cm^2]-> Area rivelatore
 
 else if strcmp(S,'Diamond')                 
 
 figure
 plot(data(:,1)*10^9,smooth(data(:,2)*dB,10));
-Eg=13*10^-6 %% [MeV] electron-hole pair energy creation 13 eV for Diamond, 7.78 for SiC 
-S_d=2.5*10^-2;
+Eg=13*10^-6     %% [MeV] electron-hole pair energy creation 13 eV for Diamond 
+S_d=2.5*10^-2;  %% [cm^2]-> Area rivelatore
 end
 end
 %% Insert the time shift and the other parameters
-dt=8592; % [ns]
+dt=8592; % [ns]  %% Istante salita del fotopicco
 
 %%FLIGHT PATH%%
-r=1.135; % [m]
+r=1.135; % [m]   %% Distanza rivelatore
 
 c2=9*10^(16); % [m2/s2] c^2
-c=3*10^8; % [m/s]
+c=3*10^8;     % [m/s]
 k=8.6*10^-5; % [eV] Cost Boltzmann
 %%Type of particle
 mp= 1*((938.27)/(9*10^16)); % [MeV/c2] col 4 sono alfa
@@ -81,7 +82,7 @@ time_max_stop=sqrt((0.5*mp*r^2)/(Ene_time_max_stop))*10^9  % [ns]
 
 
 %time_max_stop=140;%ns
-%Ene_time_max_stop=(0.5*mp*r^2)/((time_min_stop*10^-9)^2)
+%Ene_time_max_stop=(0.5*mp*r^2)/((time_m_stop*10^-9)^2)
 
 D0_2(:,1)=proton(:,1);
 D0_2(:,2)=proton(:,2);

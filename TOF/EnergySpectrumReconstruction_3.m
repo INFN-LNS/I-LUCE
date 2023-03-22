@@ -97,7 +97,6 @@ figure
 plot(E_inc_stop,V_stop)
 
 %%
-
 for(i=1:length(t_stop))
 dN_dE_stop(i)=((Eg*V_stop(i))/(e*R*E_inc_stop(i)*E_inc_stop(i)))*(0.5*t_stop(i)-Dt)
 sigma_dN_stop(i)=(((Eg*V_stop(i))/(e*R*Ang))*sqrt((((t_stop(i))/(E_inc_stop(i).^3)).^2*(sigma_inc2(i))^2)+((1/(E_inc_stop(i).^2*2)).^2*Dt^2)+(t_stop(i)/(2*E_inc_stop(i)*Ang)).^2*dAng^2));
