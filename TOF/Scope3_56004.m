@@ -275,11 +275,9 @@ ylabel('dN/dE \Omega [MeV^{-1}sr^{-1}]','FontSize',10);
 figure;
 hold on;
 plot(E_inc_loss(1:length(E_inc_loss)-1), dN_dE_inc_loss, 'm');
-ytick_vals = 10.^(9:10); % Adjust the spacing by a factor of 10 (10^9, 10^10, 10^11, ...)
-yticks(ytick_vals);
+set(gca,'YScale','log');
 hold on;
 plot(E_inc_stop(1:length(E_inc_stop)-1), dN_dE_inc_stop/Ang, 'r');
-ytick_vals = 10.^(9:10); % Adjust the spacing by a factor of 10 (10^9, 10^10, 10^11, ...)
-yticks(ytick_vals);
+set(gca,'YScale','log');
 
 
