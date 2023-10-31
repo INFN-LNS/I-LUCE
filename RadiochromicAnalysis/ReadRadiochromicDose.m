@@ -87,6 +87,7 @@ while G == 0
             % DPI (dots per inch) of the scanned image
             %
             DPI = 600;
+
             % Pixel dimension in cm
             %
             pixelDimension = 2.54/600;
@@ -97,8 +98,6 @@ while G == 0
 
             disp('ROI surface over which the dose is calculated: ' + string(ROISurface) + ' cm2')
 
-
-     
             G = G + 1;
 
         case 'n'
@@ -166,6 +165,13 @@ while G == 0
             ROISurface = HorizontalDimensionInPixels*pixelDimension*VerticalDimensionInPixels*pixelDimension;
 
             disp('ROI surface over which the dose is calculated: ' + string(ROISurface) + ' cm2')
+
+
+            % Total number of the pixels of the extracted image
+            %
+            TotalNumberOfPixels = HorizontalDimensionInPixels * VerticalDimensionInPixels;
+
+            disp('The total number of pixels of the ROI is: ' + string(TotalNumberOfPixels))
 
             
             G = G + 1;
