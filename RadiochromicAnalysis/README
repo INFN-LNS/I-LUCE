@@ -1,0 +1,9 @@
+This folder contains all the Matlab script we use to analise the radichromic films
+
+FILES EXSPLANATION
+
+==> CalibrationRCF.m
+
+==> ReadRadiochromicDose.m
+
+==> UnfoldingNew.m
