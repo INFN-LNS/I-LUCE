@@ -98,6 +98,13 @@ while G == 0
 
             disp('ROI surface over which the dose is calculated: ' + string(ROISurface) + ' cm2')
 
+            % Total number of the pixels of the extracted image
+            %
+            TotalNumberOfPixels = HorizontalDimensionInPixels * VerticalDimensionInPixels;
+
+            disp('The total number of pixels of the ROI is: ' + string(TotalNumberOfPixels))
+
+
             G = G + 1;
 
         case 'n'

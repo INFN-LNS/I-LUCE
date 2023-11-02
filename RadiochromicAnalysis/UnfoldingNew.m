@@ -13,23 +13,24 @@ close all
 
 %% Load of the stopping power matrix and definition of some constant values
 
-MatrixSP=load('0umAl_EBT3_70MeV.mat'); 
+MatrixSP=load('STACK_Al_HDV_EBT3(Config. A).mat'); 
 
-S='EBT30';
+S='Coil_2umCu_8J_S47_';
 Type='.tif';
 Zero='0';
 
-DPI=150; % 600 PER ELI
+DPI=600; % 600 PER ELI
 PxcmFactor=2.54/DPI; %dimensione di un pixel in cm
 Spot_cm2=pi*(0.75^2); % sezione trasversale del fascio in cm2 usando un collimatore con diametro da 15 mm
 Spot_px=Spot_cm2/(PxcmFactor^2); % sezione trasversale del fascio in #pixel usando un collimatore con diametro da 15 mm
 sensibility_intensity=1; % è la sensibilità di misura con cui valuto i livelli di intensit?
 
 %% imposto una curva definendo i parametri per il fit
+% The FIT formula is: a*X^3 + b*X^2 + c*X
 
-a=67958.206583;
-b=4856.320357;
-c=6906.140299;
+a=5865.6816;
+b=1147.0394;
+c=1085.3207;
 
 poly3_0=@(x) a*x.^(3)+b*x.^(2)+c*x;
 % [fitobject,gof] = fit(OD(:,1),DOSE(:,1),'poly3_0'); 
