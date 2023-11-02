@@ -6,86 +6,117 @@ Created on Thu Nov  2 21:13:52 2023
 @author: cirrone
 """
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QStackedWidget, QDialog
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt
 
-class ImageProcessingGUI(QMainWindow):
+class MyGUI(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Image Processing GUI")
-        self.setGeometry(100, 100, 800, 600)
+        self.setWindowTitle("La Tua Applicazione")
+        self.setGeometry(100, 100, 800, 600)  # Imposta le dimensioni della finestra principale
 
-        tab_widget = QTabWidget()
-        self.setCentralWidget(tab_widget)
+        # Imposta il colore di sfondo
+        self.setStyleSheet("background-color: darkgreen; color: white; font-size: 16px; background-color: darkgreen;")
 
-        calibration_tab = QWidget()
-        extraction_tab = QWidget()
-        analysis_tab = QWidget()
+        central_widget = QWidget(self)
+        self.setCentralWidget(central_widget)
 
-        tab_widget.addTab(calibration_tab, "Calibration")
-        tab_widget.addTab(extraction_tab, "Information Extraction")
-        tab_widget.addTab(analysis_tab, "Complex Analysis")
+        main_layout = QVBoxLayout()
 
-        self.init_calibration_ui(calibration_tab)
-        self.init_extraction_ui(extraction_tab)
-        self.init_analysis_ui(analysis_tab)
+        # Intestazione con logo, nome istituto, nome applicazione e versione
+        header_layout = QVBoxLayout()
 
-    def init_calibration_ui(self, tab):
-        layout = QVBoxLayout()
+        logo_label = QLabel()
+        logo_pixmap = QPixmap("LOGO_INFN_NEWS_sito.jpeg")  # Inserisci il percorso del tuo logo
+        logo_pixmap = logo_pixmap.scaledToWidth(300)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
 
-        calibrate_button = QPushButton("Calibrate Image")
-        calibrate_button.clicked.connect(self.calibrate_image)
-        layout.addWidget(calibrate_button)
+        institute_label = QLabel("Nome del tuo istituto")
+        institute_label.setAlignment(Qt.AlignCenter)
 
-        close_button = QPushButton("Close")
-        close_button.clicked.connect(self.close)
-        layout.addWidget(close_button)
+        app_label = QLabel("La Tua Applicazione v1.0")  # Sostituisci "v1.0" con la tua versione
+        app_label.setAlignment(Qt.AlignCenter)
 
-        tab.setLayout(layout)
+        name_label = QLabel("Il tuo nome")
+        name_label.setAlignment(Qt.AlignCenter)
 
-    def init_extraction_ui(self, tab):
-        layout = QVBoxLayout()
+        header_layout.addWidget(logo_label)
+        header_layout.addWidget(institute_label)
+        header_layout.addWidget(app_label)
+        header_layout.addWidget(name_label)
 
-        extract_button = QPushButton("Extract Information")
-        extract_button.clicked.connect(self.extract_information)
-        layout.addWidget(extract_button)
+        main_layout.addLayout(header_layout)
 
-        close_button = QPushButton("Close")
-        close_button.clicked.connect(self.close)
-        layout.addWidget(close_button)
+        # Barra laterale con pulsanti per le varie sezioni
+        sidebar_layout = QVBoxLayout()
 
-        tab.setLayout(layout)
+        # Regola le dimensioni e l'allineamento dei pulsanti
+        button_style = "font-size: 14px; text-align: left; background-color:#003300"
 
-    def init_analysis_ui(self, tab):
-        layout = QVBoxLayout()
+        calibration_button = QPushButton("Calibration")
+        calibration_button.setStyleSheet(button_style)
+        calibration_button.setFixedSize(200, 50)
+        single_image_analysis_button = QPushButton("Single Image Analysis")
+        single_image_analysis_button.setStyleSheet(button_style)
+        single_image_analysis_button.setFixedSize(200, 50)
+        unfolding_button = QPushButton("Unfolding")
+        unfolding_button.setStyleSheet(button_style)
+        unfolding_button.setFixedSize(200, 50)
+        exit_button = QPushButton("Esci")
+        exit_button.setStyleSheet(button_style)
+        exit_button.setFixedSize(200, 50)
 
-        analyze_button = QPushButton("Perform Analysis")
-        analyze_button.clicked.connect(self.perform_analysis)
-        layout.addWidget(analyze_button)
+        # Collega i pulsanti alle rispettive azioni
+        calibration_button.clicked.connect(self.open_calibration)
+        single_image_analysis_button.clicked.connect(self.open_single_image_analysis)
+        unfolding_button.clicked.connect(self.open_unfolding)
+        exit_button.clicked.connect(self.close)
 
-        close_button = QPushButton("Close")
-        close_button.clicked.connect(self.close)
-        layout.addWidget(close_button)
+        sidebar_layout.addWidget(calibration_button)
+        sidebar_layout.addWidget(single_image_analysis_button)
+        sidebar_layout.addWidget(unfolding_button)
+        sidebar_layout.addWidget(exit_button)
 
-        tab.setLayout(layout)
+        main_layout.addLayout(sidebar_layout)
 
-    def calibrate_image(self):
-        # Logica per la calibrazione delle immagini
-        pass
+        # Stack di widget per le pagine delle diverse sezioni
+        self.pages = QStackedWidget()
 
-    def extract_information(self):
-        # Logica per l'estrazione di informazioni dall'immagine
-        pass
+        calibration_page = QWidget()
+        single_image_analysis_page = QWidget()
+        unfolding_page = QWidget()
 
-    def perform_analysis(self):
-        # Logica per l'analisi complessa di unfolding
-        pass
+        self.pages.addWidget(calibration_page)
+        self.pages.addWidget(single_image_analysis_page)
+        self.pages.addWidget(unfolding_page)
 
-def main():
+        main_layout.addWidget(self.pages)
+
+        central_widget.setLayout(main_layout)
+
+    def open_calibration(self):
+        calibration_window = QDialog(self)
+        calibration_window.setWindowTitle("Calibration")
+        calibration_window.setGeometry(200, 200, 400, 300)  # Imposta le dimensioni della finestra
+        calibration_window.exec_()
+
+    def open_single_image_analysis(self):
+        single_image_analysis_window = QDialog(self)
+        single_image_analysis_window.setWindowTitle("Single Image Analysis")
+        single_image_analysis_window.setGeometry(200, 200, 400, 300)  # Imposta le dimensioni della finestra
+        single_image_analysis_window.exec_()
+
+    def open_unfolding(self):
+        unfolding_window = QDialog(self)
+        unfolding_window.setWindowTitle("Unfolding")
+        unfolding_window.setGeometry(200, 200, 400, 300)  # Imposta le dimensioni della finestra
+        unfolding_window.exec_()
+
+if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = ImageProcessingGUI()
+    window = MyGUI()
     window.show()
     sys.exit(app.exec_())
-
-if __name__ == "__main__":
-    main()
