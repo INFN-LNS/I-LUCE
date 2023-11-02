@@ -10,6 +10,9 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHB
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 
+from single_image_analysis import SingleImageAnalysisWindow
+
+
 class MyGUI(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -104,7 +107,7 @@ class MyGUI(QMainWindow):
         calibration_window.exec_()
 
     def open_single_image_analysis(self):
-        single_image_analysis_window = QDialog(self)
+        single_image_analysis_window = SingleImageAnalysisWindow()
         single_image_analysis_window.setWindowTitle("Single Image Analysis")
         single_image_analysis_window.setGeometry(200, 200, 400, 300)  # Imposta le dimensioni della finestra
         single_image_analysis_window.exec_()
