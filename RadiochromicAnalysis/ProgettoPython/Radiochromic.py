@@ -5,6 +5,13 @@ Created on Thu Nov  2 21:13:52 2023
 
 @author: cirrone
 """
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Nov  2 21:13:52 2023
+
+@author: cirrone
+"""
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QStackedWidget, QDialog
 from PyQt5.QtGui import QPixmap

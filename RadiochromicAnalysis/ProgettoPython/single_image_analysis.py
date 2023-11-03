@@ -1,86 +1,127 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Nov  2 22:32:49 2023
+import sys
+from PyQt5.QtWidgets import (
+    QApplication, QDialog, QVBoxLayout, QLabel, QPushButton, QFileDialog, QTextEdit
+)
 
-@author: cirrone
-"""
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QFileDialog, QTextEdit, QMainWindow, QApplication, QWidget, QMainWindow
+
+class SingleImageAnalysisApp(QApplication):
+    def __init__(self):
+        super().__init__(sys.argv)
+        self.window = SingleImageAnalysisWindow()
+        self.window.show()
+        sys.exit(self.exec_())
+
 
 class SingleImageAnalysisWindow(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Single Image Analysis")
-        self.setGeometry(600, 100, 1000, 900)  # Imposta le dimensioni della finestra
-        
-        # Imposta il colore di sfondo
-        self.setStyleSheet("background-color:white;")
+        self.setGeometry(600, 100, 1000, 900)
+        self.setStyleSheet("background-color: white;")
 
+        self.initUI()
 
+    def initUI(self):
         layout = QVBoxLayout()
-        
-        
-        # Aggiungi una barra di menu verticale allineata a sinistra
-        menu_layout = QVBoxLayout()
-        
-        # Regola le dimensioni e l'allineamento dei pulsanti
-        button_style = "font-size: 14px; text-align: left; background-color:#003300"
 
-        # Aggiungi il pulsante "Open Calibration File" al menu
+        # Menu layout
+        menu_layout = QVBoxLayout()
+        button_style = "color: white; font-size: 14px; text-align: left; background-color:#003300"
+
         open_calibration_button = QPushButton("Open Calibration File")
         open_calibration_button.setStyleSheet(button_style)
         open_calibration_button.setFixedSize(200, 50)
-        open_calibration_button.setStyleSheet("background-color: #003300; color: white;")
 
-        
         menu_layout.addWidget(open_calibration_button)
         layout.addLayout(menu_layout)
-        
-        
-        # Aggiungi un'area di testo per visualizzare il contenuto del file
+
         self.text_edit = QTextEdit()
+        self.text_edit.setFixedHeight(200)
         layout.addWidget(self.text_edit)
-        
-        # Collega il pulsante "Open Calibration File" al metodo di apertura del file
+
         open_calibration_button.clicked.connect(self.open_calibration_file)
 
-        self.setLayout(layout)
-
-
-        # Aggiungi un pulsante di chiusura
         close_button = QPushButton("Chiudi")
         layout.addWidget(close_button)
-    
-        close_button.clicked.connect(self.accept)  # Chiudi la finestra quando il pulsante viene premuto
+        close_button.clicked.connect(self.accept)
 
         self.setLayout(layout)
+        
+        # Aggiungi una finestra di log (QTextEdit) per le operazioni
+        self.log_text = QTextEdit()
+        self.log_text.setReadOnly(True)  # Imposta il QTextEdit come di sola lettura
+        layout.addWidget(self.log_text)
+
 
     def open_calibration_file(self):
         options = QFileDialog.Options()
         options |= QFileDialog.ReadOnly
 
         file_dialog = QFileDialog()
-        file_path, _ = file_dialog.getOpenFileName(self, "Open a Calibration File", "", "Text Files (*.txt);;All Files (*)", options=options)
+        file_path, _ = file_dialog.getOpenFileName(
+            self, "Open a Calibration File", "", "Text Files (*.txt);;All Files (*)", options=options
+        )
 
         if file_path:
-            # Apre e legge il contenuto del file
-            with open(file_path, 'r') as file:
-                file_content = file.read()
+            try:
+                with open(file_path, 'r') as file:
+                    # Leggi le linee del file
+                    file_content = file.readlines()
+                    # Aggiungi le operazioni al log
+                    log_message = "Calibration file opened: {}\n".format(file_path)
 
-            # Visualizza il contenuto del file nell'area di testo
-            self.text_edit.setPlainText(file_content)
+                if len(file_content) >= 5:  # Verifica che ci siano almeno 5 linee nel file
+                    fifth_line = file_content[4].strip()  # Estrai la quinta linea e rimuovi spazi vuoti
 
+                    # Dividi la quinta linea in tre numeri utilizzando lo spazio come separatore
+                    numbers = fifth_line.split()
+                
+                    if len(numbers) == 3:  # Verifica che ci siano esattamente 3 numeri
+                        P1, P2, P3 = map(float, numbers)
+                        # Ora puoi utilizzare le variabili number1, number2 e number3
+                        print("Fitting parameter P1:", P1)
+                        print("Fitting parameter P2:", P2)
+                        print("Fitting parameter P3:", P3)
+                        log_message += "Three parameters have been defined for the 3-order polynomial fitting curve:\n \
+                        P3*X^3 + P2*X^2 + P1*X \n"
+                            
+                        log_message += "The parameters are:\nP1 = " + str(P1) +"\n" \
+                            + "P2 = " + str(P2) +"\n" + "P3 = " + str(P3) +"\n"
+                        
+
+                    else:
+                        self.show_error_dialog("La quinta linea del file non contiene 3 numeri.")
+                else:
+                    self.show_error_dialog("Il file non ha abbastanza linee.")
+            except Exception as e:
+                self.show_error_dialog(str(e))
+                
+                
+        if file_path:
+            try:
+                with open(file_path, 'r') as file:
+                    file_content = file.read()
+                self.text_edit.setPlainText(file_content)
+                
+                
+                # Aggiungi altre operazioni al log
+                self.log_text.append(log_message)
+               
+            except Exception as e:
+                self.show_error_dialog(str(e))
+                
+                
+               
+    def show_error_dialog(self, message):
+        error_dialog = QDialog(self)
+        error_dialog.setWindowTitle("Error")
+        error_dialog.setGeometry(700, 300, 400, 150)
+        error_label = QLabel(message)
+        error_layout = QVBoxLayout()
+        error_layout.addWidget(error_label)
+        error_dialog.setLayout(error_layout)
+        error_dialog.exec_()
 
 
 if __name__ == '__main__':
-    app = QApplication([])
-    window = SingleImageAnalysisWindow()
-    window.show()
-    app.exec_()
-
-
-
-
-
-        
- 
+    app = SingleImageAnalysisApp()
