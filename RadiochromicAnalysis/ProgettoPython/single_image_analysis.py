@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import (
     QApplication, QDialog, QVBoxLayout, QLabel, QPushButton, QFileDialog, QTextEdit, QSizePolicy
 )
 
+from PyQt5.QtCore import Qt
+
 class SingleImageAnalysisApp(QApplication):
     def __init__(self):
         super().__init__(sys.argv)
@@ -22,7 +24,8 @@ class SingleImageAnalysisWindow(QDialog):
     def initUI(self):
         layout = QVBoxLayout()
 
-        # Menu layout
+        # OPEN CALIBRATION BUTTON
+        #
         menu_layout = QVBoxLayout()
         button_style = "color: white; font-size: 18px; text-align: left; background-color:#003300"
 
@@ -34,8 +37,13 @@ class SingleImageAnalysisWindow(QDialog):
         layout.addLayout(menu_layout)
 
         # RIQUADRO DI TESTO DOVE VIENE MOSTRATO IL CALIBRATION FILE
+        #
         self.text_edit = QTextEdit()
         self.text_edit.setFixedSize(300, 100)  # Imposta le dimensioni desiderate
+        self.text_edit.setGeometry(600, 10, 300, 100)  # Imposta le coordinate (x, y) e le dimensioni (larghezza, altezza)
+        
+
+        # Aggiungi il widget text_edit al layout
         layout.addWidget(self.text_edit)
 
         # LOG TXT WINDOW
