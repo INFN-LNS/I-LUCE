@@ -61,7 +61,7 @@ class MyGUI(QMainWindow):
         sidebar_layout = QVBoxLayout()
 
         # Regola le dimensioni e l'allineamento dei pulsanti
-        button_style = "font-size: 14px; text-align: left; background-color:#003300"
+        button_style = "color: white; font-size: 14px; text-align: left; background-color:#003300"
 
         calibration_button = QPushButton("Calibration")
         calibration_button.setStyleSheet(button_style)
