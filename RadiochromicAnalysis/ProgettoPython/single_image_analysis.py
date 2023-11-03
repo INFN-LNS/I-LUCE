@@ -41,6 +41,7 @@ class SingleImageAnalysisWindow(QDialog):
         self.text_edit.setFixedSize(300, 100)  # Imposta le dimensioni desiderate
         self.text_edit.move(800, 800)  # Imposta le coordinate (x, y)
         layout.addWidget(self.text_edit)
+        
 
         open_calibration_button.clicked.connect(self.open_calibration_file)
 
