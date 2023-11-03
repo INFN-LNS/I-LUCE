@@ -11,10 +11,10 @@ class SingleImageAnalysisWindow(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Single Image Analysis")
-        self.setGeometry(200, 200, 400, 300)  # Imposta le dimensioni della finestra
+        self.setGeometry(600, 100, 1000, 900)  # Imposta le dimensioni della finestra
         
         # Imposta il colore di sfondo
-        self.setStyleSheet("background-color: #336699;")
+        self.setStyleSheet("background-color:#003300;")
 
 
         layout = QVBoxLayout()

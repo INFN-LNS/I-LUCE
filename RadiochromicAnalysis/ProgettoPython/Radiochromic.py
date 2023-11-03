@@ -18,10 +18,10 @@ class MyGUI(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("La Tua Applicazione")
-        self.setGeometry(100, 100, 800, 600)  # Imposta le dimensioni della finestra principale
+        self.setGeometry(100, 100, 400, 600)  # Imposta le dimensioni della finestra principale
 
         # Imposta il colore di sfondo
-        self.setStyleSheet("background-color: darkgreen; color: white; font-size: 16px; background-color: darkgreen;")
+        self.setStyleSheet("color: white; font-size: 16px; background-color: white;")
 
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
@@ -39,12 +39,16 @@ class MyGUI(QMainWindow):
 
         institute_label = QLabel("Nome del tuo istituto")
         institute_label.setAlignment(Qt.AlignCenter)
+        # Imposta il colore del testo
+        institute_label.setStyleSheet("color: black;")  # Cambia il colore del testo a rosso
 
         app_label = QLabel("La Tua Applicazione v1.0")  # Sostituisci "v1.0" con la tua versione
         app_label.setAlignment(Qt.AlignCenter)
+        app_label.setStyleSheet("color: black;")
 
         name_label = QLabel("Il tuo nome")
         name_label.setAlignment(Qt.AlignCenter)
+        name_label.setStyleSheet("color: black;")
 
         header_layout.addWidget(logo_label)
         header_layout.addWidget(institute_label)
@@ -109,7 +113,6 @@ class MyGUI(QMainWindow):
     def open_single_image_analysis(self):
         single_image_analysis_window = SingleImageAnalysisWindow()
         single_image_analysis_window.setWindowTitle("Single Image Analysis")
-        single_image_analysis_window.setGeometry(200, 200, 400, 300)  # Imposta le dimensioni della finestra
         single_image_analysis_window.exec_()
 
     def open_unfolding(self):
