@@ -35,21 +35,27 @@ class SingleImageAnalysisWindow(QDialog):
         menu_layout.addWidget(open_calibration_button)
         layout.addLayout(menu_layout)
 
+        # RIQUADRO DI TESTO DOVE VIENE MOSTRATO IL CALIBRATION FILE
+        #
         self.text_edit = QTextEdit()
-        self.text_edit.setFixedHeight(200)
+        self.text_edit.setFixedSize(300, 100)  # Imposta le dimensioni desiderate
+        self.text_edit.move(800, 800)  # Imposta le coordinate (x, y)
         layout.addWidget(self.text_edit)
 
         open_calibration_button.clicked.connect(self.open_calibration_file)
 
+        # CLOSE APPLICATION BUTTON
+        #
         close_button = QPushButton("Close this analysis window")
         close_button.setStyleSheet(button_style)
         layout.addWidget(close_button)
         close_button.clicked.connect(self.accept)
-
         self.setLayout(layout)
         
+        # LOG TXT WINDOW
         # Aggiungi una finestra di log (QTextEdit) per le operazioni
         self.log_text = QTextEdit()
+        self.log_text.setFixedSize(50, 50) 
         self.log_text.setReadOnly(True)  # Imposta il QTextEdit come di sola lettura
         layout.addWidget(self.log_text)
 
