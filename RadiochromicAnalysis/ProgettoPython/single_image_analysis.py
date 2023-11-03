@@ -26,7 +26,7 @@ class SingleImageAnalysisWindow(QDialog):
 
         # Menu layout
         menu_layout = QVBoxLayout()
-        button_style = "color: white; font-size: 14px; text-align: left; background-color:#003300"
+        button_style = "color: white; font-size: 18px; text-align: left; background-color:#003300"
 
         open_calibration_button = QPushButton("Open Calibration File")
         open_calibration_button.setStyleSheet(button_style)
@@ -41,7 +41,8 @@ class SingleImageAnalysisWindow(QDialog):
 
         open_calibration_button.clicked.connect(self.open_calibration_file)
 
-        close_button = QPushButton("Chiudi")
+        close_button = QPushButton("Close this analysis window")
+        close_button.setStyleSheet(button_style)
         layout.addWidget(close_button)
         close_button.clicked.connect(self.accept)
 
