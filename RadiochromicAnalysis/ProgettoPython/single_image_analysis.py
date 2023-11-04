@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import (
-    QApplication, QDialog, QVBoxLayout, QLabel, QPushButton, QFileDialog, QTextEdit, QSizePolicy
+    QApplication, QDialog, QVBoxLayout, QLabel, QPushButton, QFileDialog, 
+        QTextEdit, QSizePolicy, QHBoxLayout, QSpacerItem
 )
 
 from PyQt5.QtCore import Qt
@@ -26,21 +27,31 @@ class SingleImageAnalysisWindow(QDialog):
 
         # OPEN CALIBRATION BUTTON
         #
-        menu_layout = QVBoxLayout()
+        #menu_layout = QVBoxLayout()
+        menu_layout = QHBoxLayout()  # Utilizza un layout orizzontale
+
         button_style = "color: white; font-size: 18px; text-align: left; background-color:#003300"
 
         open_calibration_button = QPushButton("Open Calibration File")
         open_calibration_button.setStyleSheet(button_style)
         open_calibration_button.setFixedSize(200, 50)
+        
+        # Pulsante "Start Image Analysis"
+        #
+        start_analysis_button = QPushButton("Start Image Analysis")
+        start_analysis_button.setStyleSheet(button_style)
+        start_analysis_button.setFixedSize(200, 50)
 
         menu_layout.addWidget(open_calibration_button)
+        menu_layout.addWidget(start_analysis_button)
+        
         layout.addLayout(menu_layout)
 
         # RIQUADRO DI TESTO DOVE VIENE MOSTRATO IL CALIBRATION FILE
         #
         self.text_edit = QTextEdit()
-        self.text_edit.setFixedSize(300, 100)  # Imposta le dimensioni desiderate
-        self.text_edit.setGeometry(600, 10, 300, 100)  # Imposta le coordinate (x, y) e le dimensioni (larghezza, altezza)
+        # Imposta le dimensioni desiderate
+        self.text_edit.setFixedSize(300, 100)  
         
 
         # Aggiungi il widget text_edit al layout
