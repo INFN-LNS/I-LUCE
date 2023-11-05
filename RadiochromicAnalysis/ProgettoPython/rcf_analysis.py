@@ -32,8 +32,9 @@ class RCFAnalysisWindow(QMainWindow):
         file_menu.addAction(open_calibration_act)
         
         # Crea il comando "Open image" come sotto-voce di "File"
-        open_image_action = QAction("Open image", self)
-        file_menu.addAction(open_image_action)
+        open_radiochromic_image_act = QAction("Open image", self)
+        open_radiochromic_image_act.triggered.connect(self.open_radiochromic_image)
+        file_menu.addAction(open_radiochromic_image_act)
         
         # Crea il comando "Chiudi" nel menu "File"
         close_action = QAction("Close application", self)
@@ -53,23 +54,25 @@ class RCFAnalysisWindow(QMainWindow):
         # Imposta le dimensioni desiderate
         self.calibration_file_text.setFixedSize(500, 200) 
         
-        
-        # Name of the calibration text
-        title_label = QLabel("Titolo del QTextEdit")
+        # LABEL of the calibration box
+        title_label_calibration_text = QLabel("CALIBRATION FILE")
        
-        
         # This is a space where the softwre logs shoudl be shown
         #
         self.log_text = QTextEdit()
         self.log_text.setReadOnly(True)
         self.log_text.setFixedSize(1000, 150) 
 
+        # LABEL of the calibration box
+        title_label_application_log = QLabel("APPLICATION LOG")
+
         
         # Add the defined widgets to the vertical layout
         #
-        v_box.addWidget(title_label)
+        v_box.addWidget(title_label_calibration_text)
         v_box.addWidget(self.calibration_file_text)
         v_box.addStretch()
+        v_box.addWidget(title_label_application_log)
         v_box.addWidget(self.log_text)
         
         # Set main layout of the window
@@ -78,7 +81,12 @@ class RCFAnalysisWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
 
-
+        # =======================  OPEN CALIBRATION FILE ======================
+        # This function ask to open a calibration file already prepared, 
+        # store the 
+        # fit parameters in the thre variables P1, P2 and P3 and show the same
+        # file in a text box
+        #
     def open_calibration_file(self):
         options = QFileDialog.Options()
         options |= QFileDialog.ReadOnly
@@ -127,13 +135,22 @@ class RCFAnalysisWindow(QMainWindow):
                 with open(file_path, 'r') as file:
                     file_content = file.read()
                 self.calibration_file_text.setPlainText(file_content)
-        
-        
-                # Aggiungi altre operazioni al log
-                self.log_text.append(log_message)
        
             except Exception as e:
                 self.show_error_dialog(str(e))
+                
+            # Aggiungi altre operazioni al log
+            self.log_text.append(log_message)
+    
+            
+    
+    # ======================= OPEN RADIOCHROMIC IMAGE =========================
+    # This function: 
+    # 1.- Open the TIFF file containing the image of a radiochromic film
+    # 2.- ...
+    #
+    def open_radiochromic_image(self):
+        
                 
     def show_error_dialog(self, message):
         error_dialog = QDialog(self)
