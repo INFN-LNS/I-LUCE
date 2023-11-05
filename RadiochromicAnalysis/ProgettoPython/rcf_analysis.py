@@ -14,18 +14,24 @@ class RCFAnalysisWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("RCF Analysis")
-        self.setGeometry(200, 200, 400, 300)
+        self.setGeometry(800, 200, 1000, 800)
         
         # Crea la barra dei menu
         menubar_RCF_analysis = self.menuBar()
         
-        # Crea il menu "File" nella barra dei menu
-        file_menu_RCF_analysis = menubar_RCF_analysis.addMenu("File_2")
+        # Crea il menu "Open calibration file" nella barra dei menu
+        open_menu = menubar_RCF_analysis.addMenu("Open")
+        
+        # Crea il comando "Open image" come sotto-voce di "Open"
+        open_image_action = QAction("Open image", self)
+        open_menu.addAction(open_image_action)
+        
+        
         
         # Crea il comando "Chiudi" nel menu "File"
         close_action = QAction("Chiudi", self)
         close_action.triggered.connect(self.close)
-        file_menu_RCF_analysis.addAction(close_action)
+        open_menu.addAction(close_action)
         
  
 

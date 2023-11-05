@@ -23,15 +23,15 @@ class MyMainWindow(QMainWindow):
         self.setWindowTitle("App con Barra di Menu")
 
         # Imposta le dimensioni della finestra principale
-        self.setGeometry(100, 100, 400, 100)
+        self.setGeometry(100, 100, 300, 100)
         self.setStyleSheet("background-color: rgb(0, 50, 0);")  # Imposta il colore di sfondo desiderato
 
         self.setWindowTitle('I-LUCE analisys platform')
         
-        # Crea la barra dei menu
+        # Crea la bar®ra dei menu
         menubar = self.menuBar()
 
-        # Crea il menu "Analysis" nella barra dei menu
+        # Crea il menu "Ana®lysis" nella barra dei menu
         file_menu = menubar.addMenu("Analysis")
 
         # Crea il comando "RCF Analysis" nel menu "Analysis"
