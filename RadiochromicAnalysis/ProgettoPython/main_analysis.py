@@ -80,8 +80,6 @@ class MyMainWindow(QMainWindow):
         title_3.setAlignment(Qt.AlignCenter)  # Centra il testo
         title_3.setStyleSheet("color: white;")  # Imposta il colore del testo in bianco
         
-        
-        
         logo_label = QLabel()
         logo_pixmap = QPixmap("Logo_INFN.jpeg")  
         logo_pixmap = logo_pixmap.scaledToWidth(300)
@@ -102,8 +100,7 @@ class MyMainWindow(QMainWindow):
         h_box.addLayout(v_box)
         h_box.addStretch(1)
         h_box.addWidget(logo_label)
-
-        
+      
         # Set main layout of the window
         central_widget = QWidget(self)
         central_widget.setLayout(h_box)
