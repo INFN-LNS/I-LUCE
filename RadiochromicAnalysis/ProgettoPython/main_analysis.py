@@ -1,9 +1,11 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMenuBar, QAction, QWidget
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QMenuBar, QAction, 
+                             QWidget, QVBoxLayout, QLabel, QHBoxLayout)
+from PyQt5.QtGui import QPixmap, QFont
+from PyQt5.QtCore import Qt
+
 from rcf_analysis import RCFAnalysisWindow
 from TOF_analysis import TOFAnalysisWindow
-
-
 
 class MyApplication(QApplication):
     def __init__(self):
@@ -21,7 +23,10 @@ class MyMainWindow(QMainWindow):
 
         # Imposta le dimensioni della finestra principale
         self.setGeometry(100, 100, 800, 600)
+        self.setStyleSheet("background-color: darkgreen;")  # Imposta il colore di sfondo desiderato
 
+        self.setWindowTitle('4.2 – Survey GUI')
+        
         # Crea la barra dei menu
         menubar = self.menuBar()
 
@@ -42,14 +47,43 @@ class MyMainWindow(QMainWindow):
         close_action = QAction("Chiudi", self)
         close_action.triggered.connect(self.close)
         file_menu.addAction(close_action)
+        
+        self.displayWidgets()  # Aggiunto per visualizzare i widget
 
     def open_rcf_analysis_window(self):
-        self.rcf_window = RCFAnalysisWindow()  # Usa la classe dal file separato
+        self.rcf_window = RCFAnalysisWindow()
         self.rcf_window.show()
         
     def open_TOF_analysis_window(self):
-        self.TOF_window = TOFAnalysisWindow()  # Usa la classe dal file separato
+        self.TOF_window = TOFAnalysisWindow()
         self.TOF_window.show()
+        
+    def displayWidgets(self):
+        """
+        Set up widgets using QHBoxLayout and QVBoxLayout.
+        """
+        # Create label and button widgets
+        title = QLabel("Restaurant Name")
+        title.setFont(QFont('Arial', 17))
+        
+        logo_label = QLabel()
+        logo_pixmap = QPixmap("Logo_INFN.jpeg")  
+        logo_pixmap = logo_pixmap.scaledToWidth(300)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
+        
+        
+        # Create vertical layout and add widgets 
+        v_box = QVBoxLayout()
+        v_box.addWidget(title)
+        v_box.addWidget(logo_label)
+
+
+        
+        # Set main layout of the window
+        central_widget = QWidget(self)
+        central_widget.setLayout(v_box)
+        self.setCentralWidget(central_widget)
 
 if __name__ == '__main__':
     app = MyApplication()
