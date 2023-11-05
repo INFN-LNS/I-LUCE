@@ -24,7 +24,7 @@ class MyMainWindow(QMainWindow):
 
         # Imposta le dimensioni della finestra principale
         self.setGeometry(100, 100, 400, 100)
-        self.setStyleSheet("background-color: darkgreen;")  # Imposta il colore di sfondo desiderato
+        self.setStyleSheet("background-color: rgb(0, 50, 0);")  # Imposta il colore di sfondo desiderato
 
         self.setWindowTitle('I-LUCE analisys platform')
         
@@ -45,7 +45,7 @@ class MyMainWindow(QMainWindow):
         file_menu.addAction(TOF_action)
         
         # Crea il comando "Chiudi" nel menu "File"
-        close_action = QAction("Chiudi", self)
+        close_action = QAction("Close application", self)
         close_action.triggered.connect(self.close)
         file_menu.addAction(close_action)
         
