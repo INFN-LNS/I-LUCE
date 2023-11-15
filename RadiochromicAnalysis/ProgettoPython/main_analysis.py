@@ -2,7 +2,9 @@ import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QMenuBar, QAction, 
                              QWidget, QVBoxLayout, QLabel, QHBoxLayout,
                              QSpacerItem, QSizePolicy)
+
 from PyQt5.QtGui import QPixmap, QFont
+
 from PyQt5.QtCore import Qt
 
 from rcf_analysis import RCFAnalysisWindow
@@ -24,7 +26,9 @@ class MyMainWindow(QMainWindow):
 
         # Imposta le dimensioni della finestra principale
         self.setGeometry(100, 100, 300, 100)
-        self.setStyleSheet("background-color: rgb(0, 50, 0);")  # Imposta il colore di sfondo desiderato
+        
+        # Imposta il colore di sfondo desiderato
+        self.setStyleSheet("background-color: rgb(0, 50, 0);")  
 
         self.setWindowTitle('I-LUCE analisys platform')
         
@@ -67,17 +71,17 @@ class MyMainWindow(QMainWindow):
         
         title_1 = QLabel("I-LUCE analysis platform")
         title_1.setFont(QFont('Arial', 24))
-        title_1.setAlignment(Qt.AlignCenter)  # Centra il testo
+        title_1.setAlignment(Qt.AlignCenter)    # Centra il testo
         title_1.setStyleSheet("color: white;")  # Imposta il colore del testo in bianco
         
         title_2 = QLabel("G.A.P. Cirrone")
         title_2.setFont(QFont('Arial', 24))
-        title_2.setAlignment(Qt.AlignCenter)  # Centra il testo
+        title_2.setAlignment(Qt.AlignCenter)    # Centra il testo
         title_2.setStyleSheet("color: white;")  # Imposta il colore del testo in bianco
         
         title_3 = QLabel("INFN-LNS")
         title_3.setFont(QFont('Arial', 24))
-        title_3.setAlignment(Qt.AlignCenter)  # Centra il testo
+        title_3.setAlignment(Qt.AlignCenter)    # Centra il testo
         title_3.setStyleSheet("color: white;")  # Imposta il colore del testo in bianco
         
         logo_label = QLabel()

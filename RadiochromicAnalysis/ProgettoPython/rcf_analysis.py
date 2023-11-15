@@ -8,7 +8,11 @@ Created on Sat Nov  4 22:43:47 2023
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QMenuBar, QAction, 
                              QWidget, QLabel, QWidgetAction, QFileDialog,
-                             QTextEdit, QVBoxLayout, QDialog)
+                             QTextEdit, QVBoxLayout, QDialog, QHBoxLayout)
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt
+
+from image_viewer import ImageViewer
 
 
 class RCFAnalysisWindow(QMainWindow):
@@ -41,43 +45,87 @@ class RCFAnalysisWindow(QMainWindow):
         close_action.triggered.connect(self.close)
         file_menu.addAction(close_action)
         
- 
+        # Crea la voce "Tools" nella barra del menù
+        Tools_menu = menubar_RCF_analysis.addMenu("Tools")
+        
+        # Crea il comando "Plot calibration" come sotto_voce di "Tools"
+        plot_calibration_act = QAction("Plot calibration curve", self)
+        plot_calibration_act.triggered.connect(self.plot_calibration_curve)
+        Tools_menu.addAction(plot_calibration_act)
+        
+        
+        
         # ========================  APPLICATION LAYOUT ========================
         
-        # Create vertical layout and add widgets 
-        v_box = QVBoxLayout()
+        # Global vertical layout 
+        #
+        v_box_global = QVBoxLayout()
         
-        
-        # Here the calibration file is shown
+        # Space for the calibration file text
         #
         self.calibration_file_text = QTextEdit()
         # Imposta le dimensioni desiderate
         self.calibration_file_text.setFixedSize(500, 200) 
+        self.calibration_file_text.setAlignment(Qt.AlignTop)
         
-        # LABEL of the calibration box
-        title_label_calibration_text = QLabel("CALIBRATION FILE")
-       
-        # This is a space where the softwre logs shoudl be shown
+        # Label of the calibration box text
+        #
+        label_calibration_file_text = QLabel("CALIBRATION FILE")
+        
+        # Crea un QLabel vuoto per visualizzare l'immagine
+        #
+        self.image_container = QLabel()
+        # Imposta le dimensioni desiderate
+        self.image_container.setFixedSize(400, 400)  
+        # Imposta l'allineamento al centro (opzionale)
+        self.image_container.setAlignment(Qt.AlignTop)
+        self.image_container.setStyleSheet("""background-color: skyblue;
+                                           color: white;
+                                           border-style: outset;
+                                           border-width: 3px;
+                                           border-radius: 5px;
+                                           font: bold 24px 'Times New Roman';
+                                           qproperty-alignment: AlignCenter""")
+        
+        # Label of the image container
+        #
+        label_image_container = QLabel("LOADED IMAGE")
+
+        # Logs box space
         #
         self.log_text = QTextEdit()
         self.log_text.setReadOnly(True)
         self.log_text.setFixedSize(1000, 150) 
 
-        # LABEL of the calibration box
-        title_label_application_log = QLabel("APPLICATION LOG")
-
+        # Label of the log box
+        label_log_text = QLabel("APPLICATION LOG")
+                
+        v_box_calibration_text = QVBoxLayout()
+        v_box_calibration_text.addWidget(label_calibration_file_text)
+        v_box_calibration_text.addStretch(2)
+        v_box_calibration_text.addWidget(self.calibration_file_text)
+            
+        v_box_image = QVBoxLayout()
+        v_box_image.addWidget(label_image_container)
+        v_box_image.addStretch()
+        v_box_image.addWidget(self.image_container)
         
-        # Add the defined widgets to the vertical layout
-        #
-        v_box.addWidget(title_label_calibration_text)
-        v_box.addWidget(self.calibration_file_text)
-        v_box.addStretch()
-        v_box.addWidget(title_label_application_log)
-        v_box.addWidget(self.log_text)
+        v_box_log = QVBoxLayout()
+        v_box_log.addWidget(label_log_text)
+        v_box_log.addWidget(self.log_text)
         
+        h_box_1 = QHBoxLayout()
+        h_box_1.addLayout(v_box_calibration_text)
+        h_box_1.addStretch()
+        h_box_1.addLayout(v_box_image)
+  
+        v_box_global.addLayout(h_box_1)
+        v_box_global.addStretch()
+        v_box_global.addLayout(v_box_log)
+       
         # Set main layout of the window
         central_widget = QWidget(self)
-        central_widget.setLayout(v_box)
+        central_widget.setLayout(v_box_global)
         self.setCentralWidget(central_widget)
 
 
@@ -112,7 +160,7 @@ class RCFAnalysisWindow(QMainWindow):
                 
                     if len(numbers) == 3:  # Verifica che ci siano esattamente 3 numeri
                         P1, P2, P3 = map(float, numbers)
-                        # Ora puoi utilizzare le variabili number1, number2 e number3
+                        # Ora puoi utilizzare le variabili P1, P2 e P3
                         print("Fitting parameter P1:", P1)
                         print("Fitting parameter P2:", P2)
                         print("Fitting parameter P3:", P3)
@@ -147,9 +195,44 @@ class RCFAnalysisWindow(QMainWindow):
     # ======================= OPEN RADIOCHROMIC IMAGE =========================
     # This function: 
     # 1.- Open the TIFF file containing the image of a radiochromic film
-    # 2.- ...
+    # 2.- Show it in a window inside the application and allows for
+    #       performing operations on it
     #
     def open_radiochromic_image(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.ReadOnly
+        file_dialog = QFileDialog()
+        file_path, _ = file_dialog.getOpenFileName(
+            self, 
+            "Open a Radiochromic Image", 
+            "", 
+            "TIFF Files (*.tiff *.tif);;All Files (*)", 
+            options=options
+            )
+        
+        if file_path:
+            try:
+                # Crea una nuova istanza della finestra ImageViewer
+                image_viewer = ImageViewer(file_path)
+                
+                # Mostra la finestra dell'immagine
+                image_viewer.exec_()
+                
+            except Exception as e:
+                    self.show_error_dialog(str(e))
+      
+      # ======================= PLOT CALIBRTION CURVE =========================
+              
+    def plot_calibration_curve(self):
+        print("Ciao Ciao")
+
+        import matplotlib.pyplot as plt
+       # dose = list(0,1,1000)
+       # od = 
+        
+        figure20, ax = plt.subplots(figsize=(6, 6))
+        plt.plot()
+
         
                 
     def show_error_dialog(self, message):

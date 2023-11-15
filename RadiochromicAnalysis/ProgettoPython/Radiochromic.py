@@ -6,7 +6,8 @@ Created on Thu Nov  2 21:13:52 2023
 @author: cirrone
 """
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QStackedWidget, QDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout,\
+        QHBoxLayout, QPushButton, QLabel, QStackedWidget, QDialog, QWidget
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 
@@ -124,12 +125,12 @@ class MyGUI(QMainWindow):
     def open_single_image_analysis(self):
         single_image_analysis_window = SingleImageAnalysisWindow()
         single_image_analysis_window.setWindowTitle("Single Image Analysis")
-        single_image_analysis_window.exec_()
+        single_image_analysis_window.show()
 
     def open_unfolding(self):
         unfolding_window = QDialog(self)
         unfolding_window.setWindowTitle("Unfolding")
-        # Imposta le dimensioni della finestra
+        
         unfolding_window.setGeometry(200, 200, 400, 300)  
         unfolding_window.exec_()
 
