@@ -72,14 +72,14 @@ class RCFAnalysisWindow(QMainWindow):
         #
         label_calibration_file_text = QLabel("CALIBRATION FILE")
         
-        # Crea un QLabel vuoto per visualizzare l'immagine
+        # Empty QLabel to show a figure with the calibration curve
         #
         self.image_container = QLabel()
         # Imposta le dimensioni desiderate
         self.image_container.setFixedSize(400, 400)  
         # Imposta l'allineamento al centro (opzionale)
         self.image_container.setAlignment(Qt.AlignTop)
-        self.image_container.setStyleSheet("""background-color: skyblue;
+        self.image_container.setStyleSheet("""background-color: white;
                                            color: white;
                                            border-style: outset;
                                            border-width: 3px;
@@ -87,9 +87,9 @@ class RCFAnalysisWindow(QMainWindow):
                                            font: bold 24px 'Times New Roman';
                                            qproperty-alignment: AlignCenter""")
         
-        # Label of the image container
+        # Label of the figure container
         #
-        label_image_container = QLabel("LOADED IMAGE")
+        label_image_container = QLabel("Calibration curve")
 
         # Logs box space
         #
@@ -99,11 +99,20 @@ class RCFAnalysisWindow(QMainWindow):
 
         # Label of the log box
         label_log_text = QLabel("APPLICATION LOG")
-                
+        
+        
+        # Crea un layout verticale per la scritta "Calibration file" e il QTextEdit
         v_box_calibration_text = QVBoxLayout()
-        v_box_calibration_text.addWidget(label_calibration_file_text)
+
+        # Aggiungi la scritta "Calibration file"
+        v_box_calibration_text.addWidget(label_calibration_file_text, alignment=Qt.AlignTop)
+
+        # Aggiungi lo spazio per il QTextEdit
         v_box_calibration_text.addStretch(2)
         v_box_calibration_text.addWidget(self.calibration_file_text)
+
+        # Imposta i margini del layout verticale
+        v_box_calibration_text.setContentsMargins(0, 0, 0, 200)
             
         v_box_image = QVBoxLayout()
         v_box_image.addWidget(label_image_container)
