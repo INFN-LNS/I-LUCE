@@ -8,12 +8,47 @@ Created on Sat Nov  4 22:43:47 2023
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QMenuBar, QAction, 
                              QWidget, QLabel, QWidgetAction, QFileDialog,
-                             QTextEdit, QVBoxLayout, QDialog, QHBoxLayout)
+                             QTextEdit, QVBoxLayout, QDialog, QHBoxLayout,
+                             QPushButton)
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QGraphicsScene, QGraphicsView
 
-from image_viewer import ImageViewer
 
+import numpy as np
+import matplotlib.pyplot as plt
+import io
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+
+import cv2
+
+from image_processor import ImageProcessor
+
+
+class PlotDialog(QDialog):
+    def __init__(self, x1, y1, x2, y2):
+        super(PlotDialog, self).__init__()
+
+        # Imposta il layout della finestra
+        layout = QVBoxLayout()
+
+        # Crea un oggetto FigureCanvasQtAgg per ospitare il grafico matplotlib
+        self.canvas = FigureCanvasQTAgg(Figure())
+        layout.addWidget(self.canvas)
+
+        # Imposta il grafico sulla canvas
+        self.ax = self.canvas.figure.add_subplot(111)
+        self.ax.plot(x1, y1,'o', x2, y2,'--')
+        self.ax.set_title('Calibration points and polynomial fit')
+        self.ax.set_xlabel('Net optical density')
+        self.ax.set_ylabel('Dose')
+
+        # Aggiungi layout alla finestra
+        self.setLayout(layout)
+        self.setGeometry(100, 100, 800, 600)
+        self.setWindowTitle('Plot Calibration Curve')
+        
 
 class RCFAnalysisWindow(QMainWindow):
     def __init__(self):
@@ -21,6 +56,9 @@ class RCFAnalysisWindow(QMainWindow):
 
         self.setWindowTitle("RCF Analysis")
         self.setGeometry(800, 200, 1000, 800)
+        
+        # Aggiungi un'istanza di ImageProcessor
+        self.image_processor = ImageProcessor()
         
         # =============================  MENU BAR =============================
         #
@@ -34,27 +72,27 @@ class RCFAnalysisWindow(QMainWindow):
         open_calibration_act = QAction("Open calibration file", self)
         open_calibration_act.triggered.connect(self.open_calibration_file)
         file_menu.addAction(open_calibration_act)
-        
-        # Crea il comando "Open image" come sotto-voce di "File"
-        open_radiochromic_image_act = QAction("Open image", self)
-        open_radiochromic_image_act.triggered.connect(self.open_radiochromic_image)
-        file_menu.addAction(open_radiochromic_image_act)
-        
+          
         # Crea il comando "Chiudi" nel menu "File"
         close_action = QAction("Close application", self)
         close_action.triggered.connect(self.close)
         file_menu.addAction(close_action)
+        
+        # Crea il comando "Open image to analyse" come sotto-voce di "File"
+        #
+        open_radiochromic_image_act = QAction("Open image to analyse", self)
+        open_radiochromic_image_act.triggered.connect(self.open_radiochromic_image)
+        file_menu.addAction(open_radiochromic_image_act)
         
         # Crea la voce "Tools" nella barra del menù
         Tools_menu = menubar_RCF_analysis.addMenu("Tools")
         
         # Crea il comando "Plot calibration" come sotto_voce di "Tools"
         plot_calibration_act = QAction("Plot calibration curve", self)
-        plot_calibration_act.triggered.connect(self.plot_calibration_curve)
+        plot_calibration_act.triggered.connect(self.plot_polynomial_curve)
         Tools_menu.addAction(plot_calibration_act)
         
-        
-        
+
         # ========================  APPLICATION LAYOUT ========================
         
         # Global vertical layout 
@@ -72,14 +110,14 @@ class RCFAnalysisWindow(QMainWindow):
         #
         label_calibration_file_text = QLabel("CALIBRATION FILE")
         
-        # Empty QLabel to show a figure with the calibration curve
+        # Empty QLabel to show the dose profile 
         #
-        self.image_container = QLabel()
+        self.profile_container = QLabel()
         # Imposta le dimensioni desiderate
-        self.image_container.setFixedSize(400, 400)  
+        self.profile_container.setFixedSize(600, 400)  
         # Imposta l'allineamento al centro (opzionale)
-        self.image_container.setAlignment(Qt.AlignTop)
-        self.image_container.setStyleSheet("""background-color: white;
+        self.profile_container.setAlignment(Qt.AlignTop)
+        self.profile_container.setStyleSheet("""background-color: white;
                                            color: white;
                                            border-style: outset;
                                            border-width: 3px;
@@ -89,17 +127,24 @@ class RCFAnalysisWindow(QMainWindow):
         
         # Label of the figure container
         #
-        label_image_container = QLabel("Calibration curve")
+        label_profile_container = QLabel("Dose profile curve")
 
         # Logs box space
         #
         self.log_text = QTextEdit()
         self.log_text.setReadOnly(True)
-        self.log_text.setFixedSize(1000, 150) 
+        self.log_text.setFixedSize(1000, 150)
+        self.log_text.setStyleSheet("""background-color: black;
+                                           color: green;
+                                           border-style: outset;
+                                           border-width: 3px;
+                                           border-radius: 5px;
+                                           font: bold 20px 'Times New Roman';""")
+                                          
 
         # Label of the log box
         label_log_text = QLabel("APPLICATION LOG")
-        
+       
         
         # Crea un layout verticale per la scritta "Calibration file" e il QTextEdit
         v_box_calibration_text = QVBoxLayout()
@@ -114,10 +159,10 @@ class RCFAnalysisWindow(QMainWindow):
         # Imposta i margini del layout verticale
         v_box_calibration_text.setContentsMargins(0, 0, 0, 200)
             
-        v_box_image = QVBoxLayout()
-        v_box_image.addWidget(label_image_container)
-        v_box_image.addStretch()
-        v_box_image.addWidget(self.image_container)
+        v_box_profile = QVBoxLayout()
+        v_box_profile.addWidget(label_profile_container)
+        v_box_profile.addStretch()
+        v_box_profile.addWidget(self.profile_container)
         
         v_box_log = QVBoxLayout()
         v_box_log.addWidget(label_log_text)
@@ -126,7 +171,7 @@ class RCFAnalysisWindow(QMainWindow):
         h_box_1 = QHBoxLayout()
         h_box_1.addLayout(v_box_calibration_text)
         h_box_1.addStretch()
-        h_box_1.addLayout(v_box_image)
+        h_box_1.addLayout(v_box_profile)
   
         v_box_global.addLayout(h_box_1)
         v_box_global.addStretch()
@@ -166,20 +211,34 @@ class RCFAnalysisWindow(QMainWindow):
 
                     # Dividi la quinta linea in tre numeri utilizzando lo spazio come separatore
                     numbers = fifth_line.split()
+                    
+                    # Estrai i dati dalle colonne Dose e Net OD
+                    self.dose_values = []
+                    self.net_od_values = []
+                    for line in file_content:
+                        if line.startswith("end"):
+                            break
+                        columns = line.split()
+                        if len(columns) == 2:  # Verifica che ci siano esattamente 2 colonne
+                            self.dose_values.append(float(columns[0]))
+                            self.net_od_values.append(float(columns[1]))
+                            
                 
                     if len(numbers) == 3:  # Verifica che ci siano esattamente 3 numeri
                         P1, P2, P3 = map(float, numbers)
-                        # Ora puoi utilizzare le variabili P1, P2 e P3
-                        print("Fitting parameter P1:", P1)
-                        print("Fitting parameter P2:", P2)
-                        print("Fitting parameter P3:", P3)
+                   
                         log_message += "Three parameters have been defined for the 3-order polynomial fitting curve:\n \
                         P3*X^3 + P2*X^2 + P1*X \n"
                             
                         log_message += "The parameters are:\nP1 = " + str(P1) +"\n" \
-                            + "P2 = " + str(P2) +"\n" + "P3 = " + str(P3) +"\n"
+                            + "P2 = " + str(P2) +"\n" + "P3 = " + str(P3) +"\n\n"
+                            
+                        log_message += "The dose values are: " + str(self.dose_values) + "\n"
+                        log_message += "The net-OD values are: " + str(self.net_od_values) + "\n"
                         
 
+                        if len(numbers) == 3:
+                            self.P1, self.P2, self.P3 = map(float, numbers)
                     else:
                         self.show_error_dialog("La quinta linea del file non contiene 3 numeri.")
                 else:
@@ -187,6 +246,7 @@ class RCFAnalysisWindow(QMainWindow):
             except Exception as e:
                 self.show_error_dialog(str(e))
                 
+             
         if file_path:
             try:
                 with open(file_path, 'r') as file:
@@ -198,51 +258,51 @@ class RCFAnalysisWindow(QMainWindow):
                 
             # Aggiungi altre operazioni al log
             self.log_text.append(log_message)
-    
             
-    
+
     # ======================= OPEN RADIOCHROMIC IMAGE =========================
     # This function: 
     # 1.- Open the TIFF file containing the image of a radiochromic film
-    # 2.- Show it in a window inside the application and allows for
-    #       performing operations on it
     #
+    
     def open_radiochromic_image(self):
+        # Chiedi all'utente di selezionare un'immagine utilizzando QFileDialog
         options = QFileDialog.Options()
-        options |= QFileDialog.ReadOnly
-        file_dialog = QFileDialog()
-        file_path, _ = file_dialog.getOpenFileName(
-            self, 
-            "Open a Radiochromic Image", 
-            "", 
-            "TIFF Files (*.tiff *.tif);;All Files (*)", 
-            options=options
-            )
-        
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open Image File", "", "Image Files (*.tif *.png *.jpg);;All Files (*)", options=options)
+
+        # Verifica se l'utente ha selezionato un file
         if file_path:
-            try:
-                # Crea una nuova istanza della finestra ImageViewer
-                image_viewer = ImageViewer(file_path)
-                
-                # Mostra la finestra dell'immagine
-                image_viewer.exec_()
-                
-            except Exception as e:
-                    self.show_error_dialog(str(e))
+            # Carica l'immagine utilizzando OpenCV
+            image = cv2.imread(file_path)
+
+            # Mostra solo il canale rosso
+            red_channel = image[:, :, 2]
+
+            # Utilizza ImageProcessor per mostrare l'immagine
+            self.image_processor.show_image(red_channel)
+
+            # Aggiungi operazioni al log
+            log_message = f"Radiochromic image opened: {file_path}\n"
+            self.log_text.append(log_message)
       
       # ======================= PLOT CALIBRTION CURVE =========================
               
-    def plot_calibration_curve(self):
-        print("Ciao Ciao")
+    def plot_polynomial_curve(self):
+        # Verifica se il file di calibrazione è stato caricato
+        if not hasattr(self, 'P1') or not hasattr(self, 'P2') or not hasattr(self, 'P3'):
+            self.show_error_dialog('Calibration file not loaded. Please load a calibration file first.')
+            return
 
-        import matplotlib.pyplot as plt
-       # dose = list(0,1,1000)
-       # od = 
-        
-        figure20, ax = plt.subplots(figsize=(6, 6))
-        plt.plot()
+        # Generazione del vettore x da 1 a 1000
+        x = np.arange(0, 1, 0.1)
 
-        
+        # Calcolo dei valori y del polinomio
+        #
+        y = self.P3 * x**3 + self.P2 * x**2 + self.P1
+
+        # Creazione della finestra di dialogo per il grafico
+        plot_dialog = PlotDialog(self.net_od_values, self.dose_values, x, y)
+        plot_dialog.exec_()
                 
     def show_error_dialog(self, message):
         error_dialog = QDialog(self)

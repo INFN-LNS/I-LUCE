@@ -35,10 +35,12 @@ class MyMainWindow(QMainWindow):
         # Crea la bar®ra dei menu
         menubar = self.menuBar()
 
-        # Crea il menu "Ana®lysis" nella barra dei menu
+        # Crea il menu "Ana®lysis" nella barra principale dei menu
+        #
         file_menu = menubar.addMenu("Analysis")
 
         # Crea il comando "RCF Analysis" nel menu "Analysis"
+        #
         rcf_action = QAction("RCF Analysis", self)
         rcf_action.triggered.connect(self.open_rcf_analysis_window)
         file_menu.addAction(rcf_action)
@@ -48,10 +50,16 @@ class MyMainWindow(QMainWindow):
         TOF_action.triggered.connect(self.open_TOF_analysis_window)
         file_menu.addAction(TOF_action)
         
-        # Crea il comando "Chiudi" nel menu "File"
-        close_action = QAction("Close application", self)
-        close_action.triggered.connect(self.close)
-        file_menu.addAction(close_action)
+        # Crea il menu "Calibration" nella barra principale dei menu
+        #
+        file_menu = menubar.addMenu("Calibration")
+        
+        # Crea il comando "RCF Dose Calibration" nel menu "Calibration"
+        #
+        rcf_dose_calibration_action = QAction("RCF Dose Calibration", self)
+        #rcf_dose_calibration_action.triggered.connect(self.open_rcf_dose_calibration_window)
+        file_menu.addAction(rcf_dose_calibration_action)
+        
         
         self.displayWidgets()  # Aggiunto per visualizzare i widget
 
