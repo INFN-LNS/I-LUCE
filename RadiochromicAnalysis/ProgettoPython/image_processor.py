@@ -15,9 +15,11 @@ class ImageProcessor:
     def show_image(self, image):
         # Memorizza l'immagine per l'accesso successivo
         self.image = image
+        
+      
 
         # Mostra l'immagine nel canale rosso con matplotlib
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(image.shape[1] / 100, image.shape[0] / 100), dpi=100)
         ax.imshow(image, cmap='gray')
         ax.set_title("Red Channel Image")
         ax.set_xlabel("Column")
