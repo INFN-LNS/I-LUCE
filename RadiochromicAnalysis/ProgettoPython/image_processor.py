@@ -5,19 +5,19 @@ from matplotlib.patches import Rectangle
 from PyQt5.QtWidgets import QSizePolicy, QDialog, QVBoxLayout
 
 class ImageProcessor:
-    def __init__(self):
-        self.image_canvas = None  # Riferimento alla canvas dell'immagine
-        self.image_window = None  # Riferimento alla finestra dell'immagine
+    def __init__(self, main_window, roi_value_label):
+        self.image_canvas = None
+        self.image_window = None
         self.image = None
         self.roi_rect = None
         self.roi_mean_value = None
-
+        self.main_window = main_window  # Aggiunto per memorizzare il riferimento alla finestra principale
+        self.roi_value_label = roi_value_label  # Aggiunto per memorizzare il riferimento all'etichetta ROI
+        
     def show_image(self, image):
         # Memorizza l'immagine per l'accesso successivo
         self.image = image
         
-      
-
         # Mostra l'immagine nel canale rosso con matplotlib
         fig, ax = plt.subplots(figsize=(image.shape[1] / 100, image.shape[0] / 100), dpi=100)
         ax.imshow(image, cmap='gray')

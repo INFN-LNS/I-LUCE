@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QMenuBar, QAction, 
                              QWidget, QLabel, QWidgetAction, QFileDialog,
                              QTextEdit, QVBoxLayout, QDialog, QHBoxLayout,
-                             QPushButton)
+                             QPushButton, QTableWidget, QHeaderView)
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGraphicsScene, QGraphicsView
@@ -57,9 +57,7 @@ class RCFAnalysisWindow(QMainWindow):
         self.setWindowTitle("RCF Analysis")
         self.setGeometry(800, 200, 1000, 800)
         
-        # Aggiungi un'istanza di ImageProcessor
-        self.image_processor = ImageProcessor()
-        
+
         # =============================  MENU BAR =============================
         #
         # Crea la barra dei menu
@@ -181,6 +179,23 @@ class RCFAnalysisWindow(QMainWindow):
         central_widget = QWidget(self)
         central_widget.setLayout(v_box_global)
         self.setCentralWidget(central_widget)
+        
+        
+        # Aggiungi un'etichetta per visualizzare il valore medio della ROI
+        self.roi_value_label = QLabel("ROI Mean Value: N/A")
+        v_box_log.addWidget(self.roi_value_label)
+
+        # Aggiungi un'istanza di ImageProcessor, passando il riferimento al QLabel e a se stesso
+        self.image_processor = ImageProcessor(self, self.roi_value_label)
+
+        # Aggiungi una tabella per visualizzare i valori medi delle ROI
+        self.roi_table = QTableWidget()
+        self.roi_table.setColumnCount(2)
+        self.roi_table.setHorizontalHeaderLabels(["ROI Number", "Mean Value"])
+        self.roi_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        v_box_log.addWidget(self.roi_table)
+
+        self.image_processor = ImageProcessor(self, self.roi_value_label)
 
 
         # =======================  OPEN CALIBRATION FILE ======================
