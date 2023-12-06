@@ -75,7 +75,7 @@ grid(axes1,'on');
 hold(axes1,'off');
 
 % Create ylabel
-ylabel('Dose [ Gy ]', 'Interpreter','latex');
+ylabel('Dose [ cGy ]', 'Interpreter','latex');
 
 % Create xlabel
 xlabel('Net Optical Density [ $-\log \frac{I}{I_0}$ ]','Interpreter','latex');

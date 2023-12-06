@@ -2,7 +2,9 @@ import cv2
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.patches import Rectangle
-from PyQt5.QtWidgets import QSizePolicy, QDialog, QVBoxLayout
+from PyQt5.QtWidgets import QSizePolicy, QDialog, QVBoxLayout, QTableWidgetItem
+import numpy as np
+
 
 class ImageProcessor:
     def __init__(self, main_window, roi_value_label):
@@ -13,6 +15,14 @@ class ImageProcessor:
         self.roi_mean_value = None
         self.main_window = main_window  # Aggiunto per memorizzare il riferimento alla finestra principale
         self.roi_value_label = roi_value_label  # Aggiunto per memorizzare il riferimento all'etichetta ROI
+        self.roi_pixels = None  # Inizializza roi_pixels
+        
+    def crop_image(self, start_x, start_y, width, height):
+        # Implementa il codice per ritagliare l'immagine
+        # Restituisci i pixel nella ROI
+        # ...
+        return self.roi_pixels
+
         
     def show_image(self, image):
         # Memorizza l'immagine per l'accesso successivo
@@ -75,7 +85,12 @@ class ImageProcessor:
         # Calcola e mostra il valore medio della ROI
         w = int(event.xdata) - self.start_x
         h = int(event.ydata) - self.start_y
+        roi_pixels = self.crop_image(self.start_x, self.start_y, w, h)
+        self.roi_pixels = roi_pixels  # Aggiorna roi_pixels
+
+        # Aggiorna l'etichetta con il valore medio della ROI
         self.calculate_roi_mean_value(self.start_x, self.start_y, w, h)
+
         
         
     def update_roi_rect(self, x, y, w, h):
@@ -84,10 +99,19 @@ class ImageProcessor:
         self.roi_rect.set_width(w)
         self.roi_rect.set_height(h)
         self.image_canvas.draw()
+        
 
-    def calculate_roi_mean_value(self, x, y, w, h):
-        # Calcola il valore medio dei pixel nella ROI
-        roi = self.image[y:y+h, x:x+w]
-        mean_value = roi.mean()
-        self.roi_mean_value = mean_value
-        print(f"ROI Mean Value: {mean_value}")
+    def calculate_roi_mean_value(self, start_x, start_y, width, height):
+        # Verifica se ci sono pixel nella ROI
+        if self.roi_pixels is not None and len(self.roi_pixels) > 0:
+            mean_value = np.mean(self.roi_pixels)
+
+            # Aggiungi il valore medio della ROI alla seconda colonna della tabella
+            if self.main_window.roi_table.rowCount() < self.roi_number:
+                self.main_window.roi_table.setRowCount(self.roi_number)
+
+            item = QTableWidgetItem(f"{mean_value:.4f}")
+            self.main_window.roi_table.setItem(self.roi_number - 1, 1, item)
+        else:
+            print("Nessun pixel nella ROI.")
+            

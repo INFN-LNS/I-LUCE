@@ -57,4 +57,5 @@ AveragePixelsValue = mean2(ExtractedImage);
 % Calculate the standard deviation of the pixels values
 %
 StandardDeviationPixelsValue = std2(ExtractedImage);
+
 end

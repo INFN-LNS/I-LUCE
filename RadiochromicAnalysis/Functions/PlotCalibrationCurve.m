@@ -12,7 +12,7 @@ h = plot(NetOpticalDensities, DosesValues,'MarkerSize',16,...
     'Marker','o','LineStyle','none','LineWidth', 4);
 
 xlabel('Net Optical density')
-ylabel('Dose [Gy]')
+ylabel('Dose [cGy]')
 
 box(axes1,'on');
 hold(axes1,'off');
