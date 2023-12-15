@@ -1,3 +1,5 @@
+
+# Analisi
 import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QMenuBar, QAction, 
                              QWidget, QVBoxLayout, QLabel, QHBoxLayout,
