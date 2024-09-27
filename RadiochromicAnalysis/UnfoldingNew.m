@@ -13,9 +13,9 @@ close all
 
 %% Load of the stopping power matrix and definition of some constant values
 
-MatrixSP=load('STACK_Al_HDV_EBT3(Config. A).mat'); 
+MatrixSP=load('0umAl_EBT3_70MeV.mat'); 
 
-S='Coil_2umCu_8J_S47_';
+S='EBT30';
 Type='.tif';
 Zero='0';
 
@@ -28,11 +28,11 @@ sensibility_intensity=1; % è la sensibilità di misura con cui valuto i livelli
 %% imposto una curva definendo i parametri per il fit
 % The FIT formula is: a*X^3 + b*X^2 + c*X
 
-a=5865.6816;
-b=1147.0394;
-c=1085.3207;
+P3=6.4246;   %a
+P2=28.9676;  %b
+P1=43.8217;  %c
 
-poly3_0=@(x) a*x.^(3)+b*x.^(2)+c*x;
+poly3_0=@(x) P3*x.^(3)+P2*x.^(2)+P1*x;
 % [fitobject,gof] = fit(OD(:,1),DOSE(:,1),'poly3_0'); 
 PR=poly3_0;
 
