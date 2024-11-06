@@ -1,5 +1,5 @@
 %% Experimental data 
-% c'è un filtro e i protoni dopo il filtro si fermano dentro al rivelatore
+% c'è un filtro e i protoni dopo il filtro si fermano dentro al rivelatore.
 
 % Rivelatore: SiC (densità=3.21 g/cm3)
 % Spessore Rivelatore:27 um
