@@ -19,7 +19,7 @@ S='EBT30';
 Type='.tif';
 Zero='0';
 
-DPI=600; % 600 PER ELI
+DPI=150; % 600 PER ELI
 PxcmFactor=2.54/DPI; %dimensione di un pixel in cm
 Spot_cm2=pi*(0.75^2); % sezione trasversale del fascio in cm2 usando un collimatore con diametro da 15 mm
 Spot_px=Spot_cm2/(PxcmFactor^2); % sezione trasversale del fascio in #pixel usando un collimatore con diametro da 15 mm
@@ -28,9 +28,9 @@ sensibility_intensity=1; % è la sensibilità di misura con cui valuto i livelli
 %% imposto una curva definendo i parametri per il fit
 % The FIT formula is: a*X^3 + b*X^2 + c*X
 
-P3=6.4246;   %a
-P2=28.9676;  %b
-P1=43.8217;  %c
+P3=63.6664; %a
+P2=0.1466;  %b
+P1=8.0386;  %c
 
 poly3_0=@(x) P3*x.^(3)+P2*x.^(2)+P1*x;
 % [fitobject,gof] = fit(OD(:,1),DOSE(:,1),'poly3_0'); 
@@ -229,12 +229,14 @@ Dose_letta_GAF=GafParameter(:,1)./GafParameter(:,2); % cGy/pixel --> è il valor
 %%%%%%% Conversione GAF ==> H2O
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Strato_Attivo=195; % um di acqua
-s=0;
-for i=1:TotStack
-    Spessore(i,1)=Strato_Attivo+s*355;  % per EBT3
-    s=s+1;
-end
+% % Strato_Attivo=195; % um di acqua
+% % s=0;
+% % for i=1:TotStack
+% %     Spessore(i,1)=Strato_Attivo+s*355;  % per EBT3
+% %     s=s+1;
+% % end
+
+Spessore=load("mm_H2O_HIT.txt");
 
 % Strato_Attivo=15; % um di acqua
 % s=0;
