@@ -3,9 +3,24 @@ This folder contains all the Matlab scripts we use to analyse the radichromic fi
 FILES EXPLANATION
 
 ==> CalibrationRCF.m
-This script can be used to calibrate in dose a set of radiochromic. It takes RCF images and the corresponding doses values and returns a calibration 
-curve with the fitting parameters. The output is stored in a file that can be read by other scripts (like the ReadRadiochromicDose.m) where the calibration is needed
+This script can be used to calibrate in dose a set of radiochromic. 
+It takes RCF images and the corresponding doses values and returns a calibration 
+curve with the fitting parameters. The output is stored in a file (CalibrationData.txt) 
+that can be read by other scripts (like the ReadRadiochromicDose.m or CalibrationRCF.m itself) 
+where the calibration is needed.
+
 
 ==> ReadRadiochromicDose.m
+This script can be used to convert in dose the signal of a set of radiochromic films. 
+It takes RCF images and, one-by-one, returns the corresponding dose value by using a calibration curve 
+with the fitting parameters. The output is stored in a file (CalibrationDataAndFit.txt).
+
 
 ==> UnfoldingNew.m
+This script can be used to reconstruct the depth-dose distribution of a stack of radiochromic films and 
+the spectrum of the primary protons of the incident beam. It works with all the film images together.
+It's currently under review.
+
+
+==> Test_2025
+This folder contains the EBT3 data (both calibration and stack) used as reference for tests.
