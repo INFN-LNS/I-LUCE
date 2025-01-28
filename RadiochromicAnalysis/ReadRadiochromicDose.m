@@ -11,6 +11,11 @@ clear all
 %% Add folders
 addpath("Functions/");
 
+%% Asks for the DPI value
+%
+prompt = 'Enter the DPI value used to scan the RCF films: '; % DPI (dots per inch) of the scanned image
+DPI = input(prompt); % utually, it's 150 for LNS films and 600 for ELI films
+
 %% Main while loop
 %
 G = 0;
@@ -85,13 +90,9 @@ while G == 0
 
              disp('The stimated dose is ' + string(Dose) + ' Gy')
 
-            % DPI (dots per inch) of the scanned image
-            %
-            DPI = 600;
-
             % Pixel dimension in cm
             %
-            pixelDimension = 2.54/600;
+            pixelDimension = 2.54/DPI;
             
             % Surface of the ROI over which the dose was calculated in cm2
             %
@@ -161,12 +162,9 @@ while G == 0
 
             disp('The stimated dose is ' + string(Dose) + ' Gy')
 
-            % DPI (dots per inch) of the scanned image
-            %
-            DPI = 600;
             % Pixel dimension in cm
             %
-            pixelDimension = 2.54/600;
+            pixelDimension = 2.54/DPI;
             
             % Surface of the ROI over which the dose was calculated in cm2
             %
