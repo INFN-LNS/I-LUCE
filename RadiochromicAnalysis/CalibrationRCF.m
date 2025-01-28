@@ -2,7 +2,7 @@
 % Last revision: December 2021
 %
 % Calibration in dose of radiochromic films
-%
+% Test and correction: January 2025, Cristina
 
 %% Close and clean all variables and pictures.
 %

@@ -3,6 +3,7 @@
 % Read an RCF and extract the dose in a ROI applying a given calibration
 % fit already generated
 %
+% Test and correction: January 2025, Cristina
 %%
 close all
 clear all
@@ -82,7 +83,7 @@ while G == 0
                 P2*NetOpticalDensity.^2 + ...
                 P1*NetOpticalDensity;
 
-             disp('The stimated dose is ' + string(Dose) + ' cGy')
+             disp('The stimated dose is ' + string(Dose) + ' Gy')
 
             % DPI (dots per inch) of the scanned image
             %
@@ -158,7 +159,7 @@ while G == 0
                 FitParametersAsInput(2)*NetOpticalDensity.^2 + ...
                 FitParametersAsInput(1)*NetOpticalDensity;
 
-            disp('The stimated dose is ' + string(Dose) + ' cGy')
+            disp('The stimated dose is ' + string(Dose) + ' Gy')
 
             % DPI (dots per inch) of the scanned image
             %
