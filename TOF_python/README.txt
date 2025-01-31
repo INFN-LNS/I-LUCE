@@ -7,3 +7,6 @@ Notice that this analysis is performed in the hypotesis that only one population
 
 "TOF_proton_spectrum.py" produce the differential proton spectrum
 
+The "SRIM_Outputs" is a collection of files from SRIM simulation. It contains tabs of stopping power.
+Those files are essential for the right computatiin of energy loss in Aluminum filters and in detectors of different materials.
+
