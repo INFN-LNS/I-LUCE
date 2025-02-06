@@ -11,6 +11,9 @@
 clear all
 close all
 
+%% Add folders
+addpath("Functions/");
+
 %% Load of the stopping power matrix and definition of some constant values
 
 MatrixSP=load('0umAl_EBT3_70MeV.mat'); 
@@ -19,26 +22,51 @@ S='EBT30';
 Type='.tif';
 Zero='0';
 
-DPI=150; % 600 PER ELI
-PxcmFactor=2.54/DPI; %dimensione di un pixel in cm
-Spot_cm2=pi*(0.75^2); % sezione trasversale del fascio in cm2 usando un collimatore con diametro da 15 mm
-Spot_px=Spot_cm2/(PxcmFactor^2); % sezione trasversale del fascio in #pixel usando un collimatore con diametro da 15 mm
-sensibility_intensity=1; % è la sensibilità di misura con cui valuto i livelli di intensit?
+%% Asks for the DPI value and definition of the pixel dimension in cm
+%
+prompt = 'Enter the DPI value used to scan the RCF films: '; % DPI (dots per inch) of the scanned image
+DPI = input(prompt); % usually, it's 150 for LNS films and 600 for ELI films
+PxcmFactor=2.54/DPI; % pixel dimension in cm
+% sensibility_intensity=1; % It is the sensitivity with which we evaluate the levels of intensity
 
-%% imposto una curva definendo i parametri per il fit
-% The FIT formula is: a*X^3 + b*X^2 + c*X
+%% Upload a valid Calibration
 
-P3=63.6664; %a
-P2=0.1466;  %b
-P1=8.0386;  %c
+disp('Have you a calibration file already prepared?')
+disp('y/n or press x to exit')
+
+P = input('Enter answer: ', 's');
+
+    switch P
+        case 'y'
+            disp('Select the file with the calibration data and fit parameters.')
+            filter = {'*.txt'};
+            [FileNameCalibrationDataAndFit, path] = uigetfile(filter,'File Selection','CalibrationDataAndFit.txt');
+            pathForCalibrationDataAndFit = strcat(path, FileNameCalibrationDataAndFit);
+            [P1, P2, P3, BackgroundValue, Doses, NetOpticalDensities] = ReadCalibrationDataAndFit(pathForCalibrationDataAndFit);
+       
+        case 'n'
+            disp('Enter the three fit parameters in the order P1, P2 and P3')
+            FitParameterAsInput = [];
+            for i = 1:1:3
+                FitParameter = input('Insert the fit parameter P' + string(i) + ':');
+                FitParametersAsInput(i) = FitParameter;
+            end
+
+            P1=FitParametersAsInput(1,1); 
+            P2=FitParametersAsInput(1,2);  
+            P3=FitParametersAsInput(1,3);  
+
+        case 'x'
+            disp('The program has been terminated')
+        otherwise
+            disp('Insert a valid value')
+    end
+    % return
 
 poly3_0=@(x) P3*x.^(3)+P2*x.^(2)+P1*x;
-% [fitobject,gof] = fit(OD(:,1),DOSE(:,1),'poly3_0'); 
 PR=poly3_0;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%% Calcolo intensità e dose media in ogni ROI di ogni gaf dello stack
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Calcolo intensità e dose media in ogni ROI di ogni gaf dello stack
 
 disp('Seleziona una immagine qualsiasi nella cartella dei dati che vuoi analizzare')
 [FileName_Stack,PathName_Stack]=uigetfile('*.tif','Seleziona una immagine qualsiasi nella cartella dei dati che vuoi analizzare.');
@@ -281,7 +309,7 @@ GafParameter(:,7)=E1(:,1);
 %% NORMALIZZAZIONE E CORREZIONE ...????
 
 %%==> Faccio la media della dose in tre GAF vicino l'enetrance e in cui
-%%sono sicura che non c'? dipendenza dal LET
+%%sono sicura che non c'è dipendenza dal LET
 % Dose_Di_Normalizzazione=((GafParameter(6,1)+GafParameter(7,1)+GafParameter(8,1))/3)/GafParameter(1,2); % cGy/pixel
 % Err_Dose_Di_Normalizzazione=sqrt((Err_DOSE_Stack(6,1)/3)^2+(Err_DOSE_Stack(7,1)/3)^2+(Err_DOSE_Stack(8,1)/3)^2);
 
@@ -338,10 +366,10 @@ SottrazionePesata=zeros(TotStack,1);
 %             SottrazionePesata_Corretta(i,1)=SottrazionePesata_Corretta(i,1)+(DoseStack_Corretta(j,1)*M1(i,j));
             
             
-            %DoseStack(j,1)? il vettore invertito di DOSE che abbiamo creato
-            %prima (convertita in J/cm cos? abbiamo la perdita di energia)
+            %DoseStack(j,1) è il vettore invertito di DOSE che abbiamo creato
+            %prima (convertita in J/cm così abbiamo la perdita di energia)
             
-            %moltiplichiamo per M1 che ? il fattore di peso (cio? il
+            %moltiplichiamo per M1 che è il fattore di peso (cioè il
             %rapporto tra wk1/wi 
 
 % S=StrimFactor
@@ -349,10 +377,10 @@ SottrazionePesata=zeros(TotStack,1);
 %ferma nel 90esimo gaf secondo quest'ordine: dal 90esimo gaf al primo
 %quindi dal picco all'entrance
 
-%M1 ? la matrice normalizzata ovvero ogni colonna di S ? divisa per il suo
+%M1 è la matrice normalizzata ovvero ogni colonna di S ? divisa per il suo
 %valore massimo
 
-%j ? il contributo dei protoni secondari
+%j è il contributo dei protoni secondari
             
        end
         
@@ -364,7 +392,7 @@ DoseStack(i,1)=(2.*DoseStack(i,1))-SottrazionePesata(i,1); % bisogna moltiplicar
 %  GafParameter3_corretto(:,1)=GafParameter(:,3).*Fattore_di_correzione(:,1);
 %  Err_GafParameter3_corretto(:,1)=((Err_DOSE_stack_J_cm(:,1).*Fattore_di_correzione(:,1)).^2+(GafParameter(:,3).*Err_Fattore_di_correzione(:,1)).^2).^(1/2);
 
-%% Trasporto le dosi corrette nella conolla 5 di GafParameter e sistemo l'ordine
+%% Trasporto le dosi corrette nella colonna 5 di GafParameter e sistemo l'ordine
 
 % GafParameter5_corretto(:,1)=zeros(TotStack,1); % con correzione della sottostima 
 % ERR_GafParameter5(:,1)=Err_DOSE_stack_J_cm(:,1);

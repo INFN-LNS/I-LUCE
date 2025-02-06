@@ -14,7 +14,7 @@ addpath("Functions/");
 %% Asks for the DPI value
 %
 prompt = 'Enter the DPI value used to scan the RCF films: '; % DPI (dots per inch) of the scanned image
-DPI = input(prompt); % utually, it's 150 for LNS films and 600 for ELI films
+DPI = input(prompt); % usually, it's 150 for LNS films and 600 for ELI films
 
 %% Main while loop
 %
