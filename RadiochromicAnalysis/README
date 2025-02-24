@@ -19,7 +19,11 @@ with the fitting parameters. The output is stored in a file (CalibrationDataAndF
 ==> UnfoldingNew.m
 This script can be used to reconstruct the depth-dose distribution of a stack of radiochromic films and 
 the spectrum of the primary protons of the incident beam. It works with all the film images together.
-It's currently under review.
+
+The script needs the addition of the correct Matrix (directly inside the code: this could be improved)
+It asks for the film model, the value of DPI, the folder containing the images of the films that we want to
+analyse, and the calibration. It requires the selection of a ROI that is mantained the same for all the films
+of the stack, and another one for the film choosen as control (background). 
 
 
 ==> Test_2025

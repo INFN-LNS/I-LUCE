@@ -1,12 +1,4 @@
-% % % 1 - Procedura di Unfolding: il codice originale deriva da una versione 
-% % %     non funzionante di Pietro Pisciotta;
-% % % 2 - La versione funzionante dell'intero codice di riferimento
-% % %     (originariamente calibrazione + unfolding + calcolo e propagazione degli errori su tutto) 
-% % %     è stato il lavoro di Tesi di Cristina - anno 2019
-% % % 3 - Nell'estate 2021 Giada rende più compatto il codice
-% % % 4 - Correzione del codice sul calcolo della dose (Cristina) e versione attuale senza calibrazione - 2022
-
-%% 
+%%% Mariacristina Guarrera 2025
 
 clear all
 close all
@@ -15,18 +7,17 @@ close all
 
 addpath("Functions/");
 
-%% Load of the stopping power matrix and definition of some constant values
+%% Load of the stopping power matrix and definition of the film name
 
 MatrixSP=load('0umAl_EBT3_70MeV.mat'); 
 
-% Definition of the films Name
-
-disp("Enter the name of the RCF type with a 0 added at the end:  ");
-disp('For example: EBT30, EBT40, HDV20');
+disp("Enter the name of the RCF type:  ");
+disp('For example: EBT3, EBT4, HDV2');
 disp('NB: Valid for full-GAF stack, i.e. without layers in between or a mixture of GAF types');
 S = input('Enter answer: ', 's');
 Type='.tif';
 Zero='0';
+ZeroZero='00';
 
 %% Asks for the DPI value and definition of the pixel dimension in cm
 
@@ -71,7 +62,7 @@ P = input('Enter answer: ', 's');
 poly3_0=@(x) P3*x.^(3)+P2*x.^(2)+P1*x;
 PR=poly3_0;
 
-%% Calcolo intensità e dose media in ogni ROI di ogni gaf dello stack
+%% Seleziono lo stack e definisco una ROI
 
 disp('Seleziona una immagine qualsiasi nella cartella dei dati che vuoi analizzare')
 [FileName_Stack,PathName_Stack]=uigetfile('*.tif','Seleziona una immagine qualsiasi nella cartella dei dati che vuoi analizzare.');
@@ -87,7 +78,7 @@ base=round(rect_stack(1,3))*PxcmFactor; % cm
 altezza=round(rect_stack(1,4))*PxcmFactor; % cm
 AreaRectStack=base*altezza; % area della ROI in cm2 
 
-%% Calcolo intensità e dose media sull'immagine scelta come fondo per lo stack
+%% Scelgo l'immagine da usare come sfondo per lo stack e definisco una ROI
 
 disp('Seleziona immagine da usare come fondo per lo stack')
 [FileName_Fondo,PathName_Fondo]=uigetfile('*.tif','Seleziona immagine da usare come fondo');
@@ -97,10 +88,9 @@ Fondo_Stack=imread(fullchosenfile_Fondo);
 figure(2)
 [R rect_fondo_stack]=imcrop(Fondo_Stack);
 AreaRect_Fondo_Stack=[round(rect_fondo_stack(1,3))*PxcmFactor*round(rect_fondo_stack(1,4))*PxcmFactor]; %area della ROI in cm2 
-
 Numero_di_pixel_ROI_Fondo_Stack=round(rect_fondo_stack(1,3))*round(rect_fondo_stack(1,4));
 
-%% Lavoro sul fondo
+%% Calcolo valore medio e dev standard dell'intensità dei pixel dentro la ROI del fondo dello stack
 
 Vettore_Intensita_Fondo_Stack=zeros(Numero_di_pixel_ROI_Fondo_Stack,1);
 t=1;
@@ -116,18 +106,23 @@ Average_Fondo_Stack=mean(Vettore_Intensita_Fondo_Stack);
 
 %% Lavoro sullo stack
 
-StackParameter=zeros(TotStack,8);
-GafParameter=zeros(TotStack,7);
-DO_GAF=zeros(Numero_di_pixel_ROI_Stack,TotStack);
+GafParameter=zeros(TotStack,8);
+Matrice_Intensita_Gaf_Stack=zeros(Numero_di_pixel_ROI_Stack,TotStack);
+Matrice_DO_GAF=zeros(Numero_di_pixel_ROI_Stack,TotStack);
 Dev_Standard_DO_GAF=zeros(TotStack,1);
 
 for i=1:TotStack 
-    if i<10    
-       AT=int2str(i);
-       A=strcat(Zero,AT);
-    else 
-       A=int2str(i);
+
+    if      i<10    
+            AT=int2str(i);
+            A=strcat(ZeroZero,AT);
+    elseif  (i>=10)&&(i<100)
+            AT=int2str(i);
+            A=strcat(Zero,AT);
+    else
+            A=int2str(i);
     end
+
 
     FileName_Stack=strcat(S,A,Type);
     fullchosenfileStack = [PathName_Stack FileName_Stack];
@@ -144,67 +139,56 @@ for i=1:TotStack
     t=1;
     m=1;
 
-    for j=Xmin:Xmax
-        for k=Ymin:Ymax
-            PVR=double(GAFSTACK(k,j,1));
+    for j=Xmin:Xmax % colonne
+        for k=Ymin:Ymax % righe
+            PVR=double(GAFSTACK(k,j,1)); % intensità nel rosso del singolo pixel
                
                Matrice_Intensita_Gaf_Stack(t,i)=PVR; 
-               StackParameter(i,1)=StackParameter(i,1)+PVR; % somma dei PVR per ogni ROI di ogni GAF
-               StackParameter(i,2)=StackParameter(i,2)+1; % numero di pixel della ROI
                t=t+1;
-
-               DO_PVR=log10(Average_Fondo_Stack/PVR); % qui calcoliamo la densita ottica del singolo pixel mentre in StackParameter(i,7) calcoliamo il valor medio
-               DO_GAF(m,i)=DO_PVR;    
-               DoseSinglePixel= PR(DO_PVR); 
-               GafParameter(i,1)=GafParameter(i,1)+DoseSinglePixel; % qui abbiamo la somma della dose di ogni pixel della roi
+  
+               Matrice_DO_GAF(m,i)=log10(Average_Fondo_Stack/PVR); % densita ottica del singolo pixel
+               GafParameter(i,1)=GafParameter(i,1)+PR(Matrice_DO_GAF(m,i)); % qui abbiamo la somma della dose di ogni pixel della roi
                GafParameter(i,2)=GafParameter(i,2)+1; % qui abbiamo il numero di pixel
+               GafParameter(i,8)=GafParameter(i,8)+PVR; % somma dei PVR per ogni ROI di ogni GAF
                m=m+1;
         end
     end
-    
-    StackParameter(i,3)=Average_Fondo_Stack; 
-    StackParameter(i,4)=i; %numero del GAF
-    StackParameter(i,5)=StackParameter(i,1)./StackParameter(i,2); %  valore medio dei PVR della ROI
-    StackParameter(i,6)=std(Matrice_Intensita_Gaf_Stack(:,i))./sqrt(Numero_di_pixel_ROI_Stack); 
-    StackParameter(i,7)=log10(Average_Fondo_Stack/StackParameter(i,5)); %  DO media, ovvero calcolata sulla media dell'intensita della ROI 
-    StackParameter(i,8)=PR(StackParameter(i,7)); % la DOSE media in cGy calcolata considerando la DO media 
-    
-    
+       
     GafParameter(i,3)=(GafParameter(i,1)*1*0.00001)*((PxcmFactor)^2);  %% converto la dose in J/cm
     GafParameter(i,4)=i; % numero del GAF
-    Dev_Standard_DO_GAF_i(i,1)=std(DO_GAF(:,i)); % dev sulla dose
+    Dev_Standard_DO_GAF_i(i,1)=std(Matrice_DO_GAF(:,i)); % dev sulla dose
   
 end
   
-Dose_letta_GAF=GafParameter(:,1)./GafParameter(:,2); % cGy/pixel --> è il valore medio di dose assorbita
+Dose_letta_GAF=GafParameter(:,1)./GafParameter(:,2); % Gy/pixel --> è il valore medio di dose assorbita
 
 %% creation of depth-vector in um of water
 
 switch S
-    case "EBT30"
+    case "EBT3"
     
-        Strato_Attivo=195; % um 
+        Strato_Attivo=0.195; % mm 
         s=0;
         for i=1:TotStack
-            Spessore(i,1)=Strato_Attivo+s*355;
+            Spessore(i,1)=Strato_Attivo+s*0.355;
             s=s+1;
         end
 
-    case "EBT40"
+    case "EBT4"
     
-        Strato_Attivo=195; % um 
+        Strato_Attivo=0.195; % mm 
         s=0;
         for i=1:TotStack
-            Spessore(i,1)=Strato_Attivo+s*355;
+            Spessore(i,1)=Strato_Attivo+s*0.355;
             s=s+1;
         end
 
-    case "HDV20"
+    case "HDV2"
 
-        Strato_Attivo=15; % um 
+        Strato_Attivo=0.015; % mm 
         s=0;
         for i=1:TotStack
-            Spessore(i,1)=Strato_Attivo+s*150;   
+            Spessore(i,1)=Strato_Attivo+s*0.150;   
             s=s+1;
         end
     otherwise 
@@ -214,20 +198,19 @@ end
 
 %%
 
-close all
-
-figure(1)
+figure(10)
 hold on
-plot(Spessore,Dose_letta_GAF,'bo');
-title('Dose distribution of the primary protons in water');
-xlabel('Profondità equivalente di H2O [um]');
-ylabel('Dose [cGy/pixel]');
+plot(Spessore,Dose_letta_GAF,'b.');
+title('Dose distribution of the protons in water');
+xlabel('Profondità equivalente di H2O [mm]');
+ylabel('Dose [Gy/pixel]');
 hold off
 
 %% TROVO  L'INDICE DEL GAF A CUI CORRISPONDE LA DOSE MASSIMA, QUELLA DA CUI PARTE LA CORREZIONE
 
 massimoDose=max(Dose_letta_GAF);
 [Max_index]=find(Dose_letta_GAF==massimoDose);
+Max_index
 
 %% RITAGLIO LE MATRICI OTTENUTE TRAMITE SIMULAZIONE SRIM
 
@@ -249,7 +232,7 @@ GafParameter(:,7)=E1(:,1);
 L=TotStack-Max_index+1; 
 
 for i=L:TotStack % il ciclo va al contrario 
-    DoseStack(i,1)=GafParameter((TotStack+1)-i,3); % metto in gaf quello che c'era in gafparameter ma con l'ordine inverso (partiamo da L e va fino Tot)
+    DoseStack(i,1)=GafParameter((TotStack+1)-i,3); % metto in DoseStack quello che c'era in gafparameter (:,3) ma con l'ordine inverso (partiamo da L, fino a TotStack)
 end
 
 %% SOTTRAZIONE PESATA
@@ -276,13 +259,13 @@ end
 
 %% %% PLOTTO LA DISTRIBUZIONE DI ENERGIA IN PROFONDITA' DOVUTA SOLO AI PROTONI PRIMARI
 
-figure(2)
+figure(20)
 hold on
 plot(Spessore, GafParameter(:,5), 'r-');
-title('Confronto della distribuzione di energia in profondità dovuta solo ai protoni primari di un fascio di 60 MeV FE: con correzione della sottostima e senza');
-xlabel('mmH2O');
+title('Distribuzione di energia dei soli protoni primari');
+xlabel('mm H2O');
 ylabel('Stopping Power [J/cm]');
-% xlim([0 32]);
+xlim([0 35]);
 hold off
 
 %% TROVO IL NUMERO DEI PROTONI CHE SI SONO FERMATI IN OGNI GAF ALL'INTERNO DELLA ROI
@@ -297,10 +280,11 @@ end
 Fluenza_cm2=GafParameter(:,6)./AreaRectStack;
 Fluenza_px(j,1)=GafParameter(j,6)/GafParameter(1,1);
 
+%%
 
-figure(3)
+figure(30)
 hold on
-plot(GafParameter(:,7),Fluenza_cm2(:,1),'ko');
+plot(GafParameter(:,7),Fluenza_cm2(:,1),'k.');
 xlabel('Energy [MeV]');
 ylabel('Fluence [protons/cm^2]');
 title('Fluence from deconvolution');
