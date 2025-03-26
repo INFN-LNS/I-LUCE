@@ -154,7 +154,7 @@ for i=1:TotStack
         end
     end
        
-    GafParameter(i,3)=(GafParameter(i,1)*1*0.00001)*((PxcmFactor)^2);  %% converto la dose in J/cm
+    GafParameter(i,3)=(GafParameter(i,1)*1*0.001)*((PxcmFactor)^2);  %% converto la dose da Gy a J/cm
     GafParameter(i,4)=i; % numero del GAF
     Dev_Standard_DO_GAF_i(i,1)=std(Matrice_DO_GAF(:,i)); % dev sulla dose
   
@@ -278,7 +278,7 @@ end
 %% Calcolo e plotto la fluenza 
 
 Fluenza_cm2=GafParameter(:,6)./AreaRectStack;
-Fluenza_px(j,1)=GafParameter(j,6)/GafParameter(1,1);
+Fluenza_px(:,1)=GafParameter(:,6)/GafParameter(1,2);
 
 %%
 
